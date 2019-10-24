@@ -27,8 +27,11 @@ public:
 	bool collides_with(const Fish &fish);
 	bool collides_with(const Shark &shark);
 
+	bool collides_with_wall();
 	// Returns the current salmon position
 	vec2 get_position() const;
+
+	vec2 get_bounding_box() const;
 
 	// Moves the salmon's position by the specified offset
 	void move(vec2 off);
@@ -38,6 +41,7 @@ public:
 
 	// Set salmon rotation in radians
 	void rotate(float off);
+	void reflect(float value);
 	void angled_move(float off);
 	// True if the salmon is alive
 	bool is_alive() const;

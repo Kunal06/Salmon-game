@@ -71,6 +71,8 @@ string
 -
 algorithm
 -
+cmath
+-
 
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/salmon.hpp
 common.hpp

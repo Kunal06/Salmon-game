@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cmath>
 
 bool is_up = false;
 bool is_down = false;
@@ -80,7 +81,7 @@ bool Salmon::init()
 		return false;
 
 	// Setting initial values
-	motion.position = {250.f, 300.f};
+	motion.position = {200.f, 200.f};
 	motion.radians = 0.f;
 	motion.speed = 200.f;
 
@@ -280,6 +281,38 @@ bool Salmon::collides_with(const Shark &shark)
 // salmon - wall collisions.
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+bool Salmon::collides_with_wall()
+{
+	vec2 screen = {1200, 800};
+	vec2 pos = motion.position;
+	// top boundary (0,0) to (1200,0)
+	if (pos.y - 50 < 0)
+	{
+		// fprintf(stdout, "top Wall hit\n");
+		reflect(1.0);
+		return true;
+	}
+	else if (pos.y + 50 > screen.y)
+	{
+		// fprintf(stdout, "bottom Wall hit\n");
+		reflect(1.0);
+		return true;
+	}
+	else if (pos.x - 50 < 0)
+	{
+		// fprintf(stdout, "left Wall hit\n");
+		reflect(2.0);
+		return true;
+	}
+	else if (pos.x + 50 > screen.x)
+	{
+		// fprintf(stdout, "right Wall hit\n");
+		reflect(2.0);
+		return true;
+	}
+	return false;
+}
+
 vec2 Salmon::get_position() const
 {
 	return motion.position;
@@ -311,11 +344,40 @@ void Salmon::rotate(float off)
 	motion.radians += off; //ROTATE TO MOUSE
 }
 
+void Salmon::reflect(float value)
+{
+	// move in direction
+	// float rotate = (GLfloat)atan2(motion.position.x += off.x, motion.position.y += off.y);
+	// float cs, sn, theta;
+	// theta = 360 * 4.0 * atan(1.0) / 180.0;
+	// cs = cos(theta);
+	// sn = sin(theta);
+	// vec2 off = {4.f, 4.f};
+	// float rotate = (GLfloat)atan2(motion.position.x * cs - motion.position.y * sn, motion.position.x * sn - motion.position.y * cs);
+	// fprintf(stdout, "ROTATE by %f\n", rotate);
+	float PI = 3.14159; 
+	if (value == 1.0)
+	{
+		motion.radians = -motion.radians;
+	}
+	else if (value == 2.0)
+	{
+		motion.radians = PI - motion.radians;
+	}
+}
+
 void Salmon::angled_move(float off)
 {
 	motion.position.x += off * cos(motion.radians);
 	motion.position.y += off * sin(motion.radians);
 	//translation_vec = {motion.position.x, motion.position.y};
+}
+
+vec2 Salmon::get_bounding_box() const
+{
+	// Returns the local bounding coordinates scaled by the current size of the turtle
+	// fabs is to avoid negative scale due to the facing direction.
+	return {std::fabs(physics.scale.x), std::fabs(physics.scale.y)};
 }
 
 bool Salmon::is_alive() const
@@ -338,7 +400,6 @@ void Salmon::set_movement(const std::string &flag)
 
 	if (flag == "down")
 	{
-		fprintf(stdout, "set_movement:::keypress down\n");
 		is_down = true;
 	}
 	if (flag == "downf")
