@@ -36,6 +36,9 @@ public:
 	// Set salmon rotation in radians
 	void set_rotation(float radians);
 
+	// Set salmon rotation in radians
+	void rotate(float off);
+
 	// True if the salmon is alive
 	bool is_alive() const;
 

@@ -556,7 +556,17 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 	// Moving Left
 	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
 	{
+
 		m_salmon.set_movement("left");
+		// int w, h;
+		// vec2 salmon_pos = m_salmon.get_position();
+		// vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
+
+		// fprintf(stderr, "xposition - %f\n", screen.x);
+		// fprintf(stderr, "yposition - %f\n", screen.y);
+		// float rotate = (GLfloat)atan2(screen.y - salmon_pos.y, screen.x - salmon_pos.x); //ROTATE TO MOUSE
+		// m_salmon.set_rotation(rotate);
+		// m_salmon.rotate();
 	}
 	else if (action == GLFW_RELEASE && key == GLFW_KEY_LEFT)
 	{
@@ -590,9 +600,10 @@ void World::on_mouse_move(GLFWwindow *window, double xpos, double ypos)
 	// default facing direction is (1, 0)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	vec2 salmon_pos = m_salmon.get_position();
-
+	// fprintf(stderr, "xposition - %f\n", xpos);
+	// fprintf(stderr, " yposition - %f\n", ypos);
 	float angle = atan2(ypos - salmon_pos.y, xpos - salmon_pos.x);
 	float rotate = (GLfloat)atan2(ypos - salmon_pos.y, xpos - salmon_pos.x); //ROTATE TO MOUSE
 
-	m_salmon.set_rotation(rotate);
+	// m_salmon.set_rotation(rotate);
 }

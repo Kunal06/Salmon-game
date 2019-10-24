@@ -113,6 +113,7 @@ void Salmon::update(float ms)
 	vec2 down_vec = {0.f, 10.f};
 	vec2 left_vec = {-10.f, 0.f};
 	vec2 right_vec = {10.f, 0.f};
+	float off = 0.05;
 	if (m_is_alive)
 	{
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -128,11 +129,11 @@ void Salmon::update(float ms)
 		}
 		if (is_left)
 		{
-			move(left_vec);
+			rotate(off);
 		}
 		if (is_right)
 		{
-			move(right_vec);
+			rotate(-off);
 		}
 	}
 	else
@@ -292,6 +293,20 @@ void Salmon::move(vec2 off)
 void Salmon::set_rotation(float radians)
 {
 	motion.radians = radians;
+}
+
+void Salmon::rotate(float off)
+{
+	// move in direction
+	// float rotate = (GLfloat)atan2(motion.position.x += off.x, motion.position.y += off.y);
+	// float cs, sn, theta;
+	// theta = 360 * 4.0 * atan(1.0) / 180.0;
+	// cs = cos(theta);
+	// sn = sin(theta);
+	// vec2 off = {4.f, 4.f};
+	// float rotate = (GLfloat)atan2(motion.position.x * cs - motion.position.y * sn, motion.position.x * sn - motion.position.y * cs);
+	// fprintf(stdout, "ROTATE by %f\n", rotate);
+	motion.radians += off; //ROTATE TO MOUSE
 }
 
 bool Salmon::is_alive() const
