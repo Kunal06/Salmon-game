@@ -80,7 +80,7 @@ bool Salmon::init()
 		return false;
 
 	// Setting initial values
-	motion.position = {50.f, 100.f};
+	motion.position = {250.f, 300.f};
 	motion.radians = 0.f;
 	motion.speed = 200.f;
 
@@ -113,7 +113,9 @@ void Salmon::update(float ms)
 	vec2 down_vec = {0.f, 10.f};
 	vec2 left_vec = {-10.f, 0.f};
 	vec2 right_vec = {10.f, 0.f};
-	float off = 0.05;
+	float rotate_speed = 0.08;
+	float angle_move_speed = 20;
+
 	if (m_is_alive)
 	{
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -121,19 +123,19 @@ void Salmon::update(float ms)
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if (is_up)
 		{
-			move(up_vec);
+			angled_move(angle_move_speed);
 		}
-		if (is_down)
+		else if (is_down)
 		{
-			move(down_vec);
+			angled_move(-angle_move_speed);
 		}
-		if (is_left)
+		else if (is_left)
 		{
-			rotate(off);
+			rotate(-rotate_speed);
 		}
-		if (is_right)
+		else if (is_right)
 		{
-			rotate(-off);
+			rotate(rotate_speed);
 		}
 	}
 	else
@@ -307,6 +309,13 @@ void Salmon::rotate(float off)
 	// float rotate = (GLfloat)atan2(motion.position.x * cs - motion.position.y * sn, motion.position.x * sn - motion.position.y * cs);
 	// fprintf(stdout, "ROTATE by %f\n", rotate);
 	motion.radians += off; //ROTATE TO MOUSE
+}
+
+void Salmon::angled_move(float off)
+{
+	motion.position.x += off * cos(motion.radians);
+	motion.position.y += off * sin(motion.radians);
+	//translation_vec = {motion.position.x, motion.position.y};
 }
 
 bool Salmon::is_alive() const
