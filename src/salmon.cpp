@@ -23,7 +23,7 @@ bool Salmon::init()
 	std::vector<uint16_t> indices;
 
 	// Reads the salmon mesh from a file, which contains a list of vertices and indices
-	FILE* mesh_file = fopen(mesh_path("salmon.mesh"), "r");
+	FILE *mesh_file = fopen(mesh_path("salmon.mesh"), "r");
 	if (mesh_file == nullptr)
 		return false;
 
@@ -35,10 +35,10 @@ bool Salmon::init()
 		float x, y, z;
 		float _u[3]; // unused
 		int r, g, b;
-		fscanf(mesh_file, "%f %f %f %f %f %f %d %d %d\n", &x, &y, &z, _u, _u+1, _u+2, &r, &g, &b);
+		fscanf(mesh_file, "%f %f %f %f %f %f %d %d %d\n", &x, &y, &z, _u, _u + 1, _u + 2, &r, &g, &b);
 		Vertex vertex;
-		vertex.position = { x, y, -z };
-		vertex.color = { (float)r / 255, (float)g / 255, (float)b / 255 };
+		vertex.position = {x, y, -z};
+		vertex.color = {(float)r / 255, (float)g / 255, (float)b / 255};
 		vertices.push_back(vertex);
 	}
 
@@ -80,11 +80,11 @@ bool Salmon::init()
 		return false;
 
 	// Setting initial values
-	motion.position = { 50.f, 100.f };
+	motion.position = {50.f, 100.f};
 	motion.radians = 0.f;
 	motion.speed = 200.f;
 
-	physics.scale = { -35.f, 35.f };
+	physics.scale = {-35.f, 35.f};
 
 	m_is_alive = true;
 	m_light_up_countdown_ms = -1.f;
@@ -109,8 +109,8 @@ void Salmon::update(float ms)
 {
 	const float SALMON_SPEED = 200.f;
 	float step = SALMON_SPEED * (ms / 1000);
-	vec2 up_vec = {0.f, -10.f };
-	vec2 down_vec = {0.f, 10.f };
+	vec2 up_vec = {0.f, -10.f};
+	vec2 down_vec = {0.f, 10.f};
 	vec2 left_vec = {-10.f, 0.f};
 	vec2 right_vec = {10.f, 0.f};
 	if (m_is_alive)
@@ -118,31 +118,35 @@ void Salmon::update(float ms)
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		// UPDATE SALMON POSITION HERE BASED ON KEY PRESSED (World::on_key())
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		if (is_up) {
- 			move(up_vec);
- 		}
- 		if (is_down) {
- 			move(down_vec);
- 		}
- 		if (is_left) {
- 			move(left_vec);
- 		}
- 		if (is_right) {
- 			move(right_vec);
- 		}
+		if (is_up)
+		{
+			move(up_vec);
+		}
+		if (is_down)
+		{
+			move(down_vec);
+		}
+		if (is_left)
+		{
+			move(left_vec);
+		}
+		if (is_right)
+		{
+			move(right_vec);
+		}
 	}
 	else
 	{
 		// If dead we make it face upwards and sink deep down
 		set_rotation(3.1415f);
-		move({ 0.f, step });
+		move({0.f, step});
 	}
 
 	if (m_light_up_countdown_ms > 0.f)
 		m_light_up_countdown_ms -= ms;
 }
 
-void Salmon::draw(const mat3& projection)
+void Salmon::draw(const mat3 &projection)
 {
 	transform.begin();
 
@@ -169,7 +173,8 @@ void Salmon::draw(const mat3& projection)
 	glUseProgram(effect.program);
 
 	// Enabling alpha channel for textures
-	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 
 	// Getting uniform locations
@@ -188,16 +193,16 @@ void Salmon::draw(const mat3& projection)
 	GLint in_color_loc = glGetAttribLocation(effect.program, "in_color");
 	glEnableVertexAttribArray(in_position_loc);
 	glEnableVertexAttribArray(in_color_loc);
-	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-	glVertexAttribPointer(in_color_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)sizeof(vec3));
+	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
+	glVertexAttribPointer(in_color_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)sizeof(vec3));
 
 	// Setting uniform values to the currently bound program
-	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
+	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
 
 	// !!! Salmon Color
-	float color[] = { 1.f, 1.f, 1.f };
+	float color[] = {1.f, 1.f, 1.f};
 	glUniform3fv(color_uloc, 1, color);
-	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
 
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HERE TO SET THE CORRECTLY LIGHT UP THE SALMON IF HE HAS EATEN RECENTLY
@@ -205,12 +210,13 @@ void Salmon::draw(const mat3& projection)
 	int light_up = (m_light_up_countdown_ms > 0.f) ? 1 : 0;
 	glUniform1iv(light_up_uloc, 1, &light_up);
 
-	float red_color[] = { 255.f, 0.f, 0.f };
+	float red_color[] = {255.f, 0.f, 0.f};
 
 	// When the salmon gets hit by a turtle or a shark salmon turns red
-	if (!is_alive()) {
+	if (!is_alive())
+	{
 		glUniform3fv(color_uloc, 1, red_color);
- 	}
+	}
 	// Get number of infices from buffer,
 	// we know our vbo contains both colour and position information, so...
 	GLint size = 0;
@@ -223,7 +229,7 @@ void Salmon::draw(const mat3& projection)
 }
 
 // Simple bounding box collision check
-bool Salmon::collides_with(const Turtle& turtle)
+bool Salmon::collides_with(const Turtle &turtle)
 {
 	float dx = motion.position.x - turtle.get_position().x;
 	float dy = motion.position.y - turtle.get_position().y;
@@ -237,7 +243,7 @@ bool Salmon::collides_with(const Turtle& turtle)
 	return false;
 }
 
-bool Salmon::collides_with(const Fish& fish)
+bool Salmon::collides_with(const Fish &fish)
 {
 	float dx = motion.position.x - fish.get_position().x;
 	float dy = motion.position.y - fish.get_position().y;
@@ -251,7 +257,7 @@ bool Salmon::collides_with(const Fish& fish)
 	return false;
 }
 // Shark Added
-bool Salmon::collides_with(const Shark& shark)
+bool Salmon::collides_with(const Shark &shark)
 {
 	float dx = motion.position.x - shark.get_position().x;
 	float dy = motion.position.y - shark.get_position().y;
@@ -280,7 +286,7 @@ void Salmon::move(vec2 off)
 {
 	motion.position.x += off.x;
 	motion.position.y += off.y;
-	translation_vec = { motion.position.x, motion.position.y };
+	translation_vec = {motion.position.x, motion.position.y};
 }
 
 void Salmon::set_rotation(float radians)
@@ -294,55 +300,69 @@ bool Salmon::is_alive() const
 }
 
 // Set salmon movement flag (used to keep track of the action and release(f) of the user keys)
- void Salmon::set_movement(const std::string& flag) {
- 	if (flag == "up") {
- 		is_up = true;
- 	}
+void Salmon::set_movement(const std::string &flag)
+{
+	if (flag == "up")
+	{
+		is_up = true;
+	}
 
-  if (flag == "upf") {
- 		is_up = false;
- 	}
+	if (flag == "upf")
+	{
+		is_up = false;
+	}
 
-	if (flag == "down") {
+	if (flag == "down")
+	{
 		fprintf(stdout, "set_movement:::keypress down\n");
- 		is_down = true;
- 	}
- 	if (flag == "downf") {
- 		is_down = false;
- 	}
+		is_down = true;
+	}
+	if (flag == "downf")
+	{
+		is_down = false;
+	}
 
-  if (flag == "left") {
- 		is_left = true;
- 	}
- 	if (flag == "leftf") {
- 		is_left = false;
- 	}
+	if (flag == "left")
+	{
+		is_left = true;
+	}
+	if (flag == "leftf")
+	{
+		is_left = false;
+	}
 
-  if (flag == "right") {
- 		is_right = true;
- 	}
+	if (flag == "right")
+	{
+		is_right = true;
+	}
 
-  if (flag == "rightf") {
- 		is_right = false;
- 	}
- }
+	if (flag == "rightf")
+	{
+		is_right = false;
+	}
+}
 
-  // Get salmon movement flag (used to keep track of the movement)
- bool Salmon::get_movement(const std::string& flag) {
-				if (flag == "up") {
-			 		return is_up;
-			 	}
-			 	else if (flag == "down") {
-			 		return is_down;
-			 	}
-			 	else if (flag == "left") {
-			 		return is_left;
-			 	}
-			 	else if (flag == "right") {
-			 		return is_right;
-			 	}
-				// check
-				return is_up;
+// Get salmon movement flag (used to keep track of the movement)
+bool Salmon::get_movement(const std::string &flag)
+{
+	if (flag == "up")
+	{
+		return is_up;
+	}
+	else if (flag == "down")
+	{
+		return is_down;
+	}
+	else if (flag == "left")
+	{
+		return is_left;
+	}
+	else if (flag == "right")
+	{
+		return is_right;
+	}
+	// check
+	return is_up;
 }
 
 // Called when the salmon collides with a turtle or shark

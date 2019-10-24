@@ -11,10 +11,10 @@ namespace
 {
 const size_t MAX_TURTLES = 15;
 const size_t MAX_FISH = 5;
-const size_t TURTLE_DELAY_MS = 2000;
-const size_t FISH_DELAY_MS = 5000;
-const size_t MAX_SHARKS = 15;
-const size_t SHARK_DELAY_MS = 12000;
+const size_t TURTLE_DELAY_MS = 4000;
+const size_t FISH_DELAY_MS = 6000;
+const size_t MAX_SHARKS = 5;
+const size_t SHARK_DELAY_MS = 14000;
 bool advanced = false;
 
 namespace
