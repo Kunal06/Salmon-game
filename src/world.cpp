@@ -16,6 +16,7 @@ const size_t FISH_DELAY_MS = 6000;
 const size_t MAX_SHARKS = 5;
 const size_t SHARK_DELAY_MS = 14000;
 bool advanced = false;
+bool debug_mode = false;
 
 namespace
 {
@@ -127,8 +128,9 @@ bool World::init(vec2 screen)
 	fprintf(stderr, "Loaded music\n");
 
 	m_current_speed = 1.f;
+	
 
-	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init();
+	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init() && m_water.draw_rect_init();
 }
 
 // Releases all the associated resources
@@ -420,6 +422,14 @@ void World::draw()
 	// relevant information to your debug draw call.
 	// The shaders coloured.vs.glsl and coloured.fs.glsl should be helpful.
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if(debug_mode)
+	{
+		m_water.draw_rect(1);
+	}
+	else
+		m_water.draw_rect(0);
+	
+
 
 	// Drawing entities
 	for (auto &turtle : m_turtles)
@@ -512,11 +522,13 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 	// Turns the game advanced mode on
 	if (action == GLFW_PRESS && key == GLFW_KEY_A)
 	{
-		advanced = true;
+		advanced = !advanced;
 	}
-	else if (action == GLFW_RELEASE && key == GLFW_KEY_B)
+	if (action == GLFW_PRESS && key == GLFW_KEY_D)
 	{
-		advanced = false;
+		debug_mode = !debug_mode;
+		fprintf(stderr, "Debug mode - %d", debug_mode );
+
 	}
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
@@ -608,3 +620,4 @@ void World::on_mouse_move(GLFWwindow *window, double xpos, double ypos)
 
 	// m_salmon.set_rotation(rotate);
 }
+

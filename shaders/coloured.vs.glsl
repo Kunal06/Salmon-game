@@ -1,16 +1,13 @@
-#version 330
- 
-// !!! Simple shader for colouring basic meshes
+#version 330 
 
-// Input attributes
-in vec3 in_position;
+layout(location = 0) in vec4 in_position;
 
-// Application data
-uniform mat3 transform;
-uniform mat3 projection;
+out vec2 uv;
 
 void main()
 {
-	vec3 pos = projection * transform * vec3(in_position.xy, 1.0);
-	gl_Position = vec4(pos.xy, in_position.z, 1.0);
+    gl_Position = vec4(in_position.x, in_position.y, 0.9, in_position.w);
+
+    // Convert to the [0, 1] range of UV coordinate
+    uv = (in_position.xy + vec2(1.05, 1.05)) / 2.1;
 }

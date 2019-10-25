@@ -286,25 +286,25 @@ bool Salmon::collides_with_wall()
 	vec2 screen = {1200, 800};
 	vec2 pos = motion.position;
 	// top boundary (0,0) to (1200,0)
-	if (pos.y - 50 < 0)
+	if (pos.y - 120 < 0)
 	{
 		// fprintf(stdout, "top Wall hit\n");
 		reflect(1.0);
 		return true;
 	}
-	else if (pos.y + 50 > screen.y)
+	else if (pos.y + 120 > screen.y)
 	{
 		// fprintf(stdout, "bottom Wall hit\n");
 		reflect(1.0);
 		return true;
 	}
-	else if (pos.x - 50 < 0)
+	else if (pos.x - 120 < 0)
 	{
 		// fprintf(stdout, "left Wall hit\n");
 		reflect(2.0);
 		return true;
 	}
-	else if (pos.x + 50 > screen.x)
+	else if (pos.x + 120 > screen.x)
 	{
 		// fprintf(stdout, "right Wall hit\n");
 		reflect(2.0);
