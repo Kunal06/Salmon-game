@@ -17,6 +17,7 @@ const size_t MAX_SHARKS = 5;
 const size_t SHARK_DELAY_MS = 14000;
 bool advanced = false;
 bool debug_mode = false;
+bool collision_value = false;
 
 namespace
 {
@@ -227,7 +228,15 @@ bool World::update(float elapsed_ms)
 	// HANDLE SALMON - WALL COLLISIONS HERE
 	// DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 2
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	bool collision_value = m_salmon.collides_with_wall();
+	collision_value = m_salmon.collides_with_wall();
+	if(debug_mode){
+		if(collision_value){
+			m_current_speed = 0.f;
+		}
+		if(m_current_speed < 1.f){
+			m_current_speed += 0.1;
+		}
+	}
 	
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE PEBBLE COLLISIONS HERE
@@ -425,11 +434,14 @@ void World::draw()
 	if(debug_mode)
 	{
 		m_water.draw_rect(1);
+		m_salmon.set_debug_mode(true);
 	}
 	else
+	{
 		m_water.draw_rect(0);
+		m_salmon.set_debug_mode(false);
+	}
 	
-
 
 	// Drawing entities
 	for (auto &turtle : m_turtles)
@@ -545,6 +557,7 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 		m_sharks.clear();
 		m_water.reset_salmon_dead_time();
 		m_current_speed = 1.f;
+		debug_mode = false;
 	}
 	// Moving Down
 	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)

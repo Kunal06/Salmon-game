@@ -155,7 +155,10 @@ void Water::draw_rect(int debug_mode){
 	GLuint time_uloc = glGetUniformLocation(effect.program, "time");
 	GLuint debug_mode_uloc = glGetUniformLocation(effect.program, "debug_mode");
 	GLuint dead_timer_uloc = glGetUniformLocation(effect.program, "dead_timer");
+	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 
+	float color[] = {0.f, 0.f, 0.f};
+	glUniform3fv(color_uloc, 1, color);
 
 	GLuint window_width_uloc = glGetUniformLocation(effect.program, "window_width");
 	GLuint window_height_uloc = glGetUniformLocation(effect.program, "window_height");

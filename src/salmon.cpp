@@ -16,6 +16,10 @@ bool is_up = false;
 bool is_down = false;
 bool is_left = false;
 bool is_right = false;
+bool debug_mode = false;
+bool collided = false;
+float rotate_speed = 0.08;
+
 vec2 translation_vec;
 
 bool Salmon::init()
@@ -81,9 +85,12 @@ bool Salmon::init()
 		return false;
 
 	// Setting initial values
+	debug_mode = false;
+	collided = false;
+	rotate_speed = 0.08;
 	motion.position = {200.f, 200.f};
 	motion.radians = 0.f;
-	motion.speed = 200.f;
+	motion.speed = 15.f;
 
 	physics.scale = {-35.f, 35.f};
 
@@ -114,8 +121,12 @@ void Salmon::update(float ms)
 	vec2 down_vec = {0.f, 10.f};
 	vec2 left_vec = {-10.f, 0.f};
 	vec2 right_vec = {10.f, 0.f};
-	float rotate_speed = 0.08;
-	float angle_move_speed = 20;
+	
+	if(debug_mode){
+		if(motion.speed < 20){
+			motion.speed += 0.2;
+		}
+	}
 
 	if (m_is_alive)
 	{
@@ -124,11 +135,11 @@ void Salmon::update(float ms)
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if (is_up)
 		{
-			angled_move(angle_move_speed);
+			angled_move(1.0);
 		}
 		else if (is_down)
 		{
-			angled_move(-angle_move_speed);
+			angled_move(-1.0);
 		}
 		else if (is_left)
 		{
@@ -285,32 +296,51 @@ bool Salmon::collides_with_wall()
 {
 	vec2 screen = {1200, 800};
 	vec2 pos = motion.position;
+	int offset_verticle = 100;
+	int offset_horizontal = 120;
+	if (debug_mode && collided){
+		// rotate_speed = 0.0;
+		motion.speed = 2.0;
+	}
+	if(debug_mode){
+		offset_verticle = 120;
+		offset_horizontal = 140;
+		}
 	// top boundary (0,0) to (1200,0)
-	if (pos.y - 120 < 0)
+	if ((pos.y - offset_verticle > 0 && pos.y + offset_verticle < screen.y) && (pos.x - offset_horizontal > 0 && pos.x + offset_horizontal < screen.x ))
+	{
+		// fprintf(stdout, "right Wall hit\n");
+		collided = false;
+	}
+	else if (pos.y - offset_verticle < 0)
 	{
 		// fprintf(stdout, "top Wall hit\n");
 		reflect(1.0);
-		return true;
+		collided = true;
 	}
-	else if (pos.y + 120 > screen.y)
+	else if (pos.y + offset_verticle > screen.y)
 	{
 		// fprintf(stdout, "bottom Wall hit\n");
 		reflect(1.0);
-		return true;
+		collided = true;
 	}
-	else if (pos.x - 120 < 0)
+	else if (pos.x - offset_horizontal < 0)
 	{
 		// fprintf(stdout, "left Wall hit\n");
 		reflect(2.0);
-		return true;
+		collided = true;
 	}
-	else if (pos.x + 120 > screen.x)
+	else if (pos.x + offset_horizontal > screen.x)
 	{
 		// fprintf(stdout, "right Wall hit\n");
 		reflect(2.0);
-		return true;
+		collided = true;
 	}
-	return false;
+	if(debug_mode && collided)
+		glfwWaitEventsTimeout(80.0);
+
+
+	return collided;
 }
 
 vec2 Salmon::get_position() const
@@ -355,21 +385,24 @@ void Salmon::reflect(float value)
 	// vec2 off = {4.f, 4.f};
 	// float rotate = (GLfloat)atan2(motion.position.x * cs - motion.position.y * sn, motion.position.x * sn - motion.position.y * cs);
 	// fprintf(stdout, "ROTATE by %f\n", rotate);
-	float PI = 3.14159; 
+	float PI = 3.14159;
 	if (value == 1.0)
 	{
 		motion.radians = -motion.radians;
+		angled_move(1.0);
+
 	}
 	else if (value == 2.0)
 	{
 		motion.radians = PI - motion.radians;
+		angled_move(1.0);
 	}
 }
 
 void Salmon::angled_move(float off)
 {
-	motion.position.x += off * cos(motion.radians);
-	motion.position.y += off * sin(motion.radians);
+	motion.position.x += off * motion.speed * cos(motion.radians);
+	motion.position.y += off * motion.speed * sin(motion.radians);
 	//translation_vec = {motion.position.x, motion.position.y};
 }
 
@@ -461,3 +494,9 @@ void Salmon::light_up()
 {
 	m_light_up_countdown_ms = 1500.f;
 }
+
+void Salmon::set_debug_mode(bool value)
+{
+	debug_mode = value;
+}
+

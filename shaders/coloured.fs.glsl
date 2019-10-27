@@ -6,6 +6,7 @@ uniform float dead_timer;
 uniform int debug_mode;
 uniform int window_width;
 uniform int window_height;
+uniform vec3 fcolor;
 
 in vec2 uv;
 

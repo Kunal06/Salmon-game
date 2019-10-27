@@ -58,6 +58,8 @@ public:
 	// Get salmon movement flag (keep track of the movement )
 	bool get_movement(const std::string &flag);
 
+	void set_debug_mode(bool value);
+
 private:
 	float m_light_up_countdown_ms; // Used to keep track for how long the salmon should be lit up
 	bool m_is_alive;			   // True if the salmon is alive
