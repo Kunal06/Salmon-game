@@ -123,6 +123,33 @@ salmon/fast:
 	$(MAKE) -f CMakeFiles/salmon.dir/build.make CMakeFiles/salmon.dir/build
 .PHONY : salmon/fast
 
+src/box.o: src/box.cpp.o
+
+.PHONY : src/box.o
+
+# target to build an object file
+src/box.cpp.o:
+	$(MAKE) -f CMakeFiles/salmon.dir/build.make CMakeFiles/salmon.dir/src/box.cpp.o
+.PHONY : src/box.cpp.o
+
+src/box.i: src/box.cpp.i
+
+.PHONY : src/box.i
+
+# target to preprocess a source file
+src/box.cpp.i:
+	$(MAKE) -f CMakeFiles/salmon.dir/build.make CMakeFiles/salmon.dir/src/box.cpp.i
+.PHONY : src/box.cpp.i
+
+src/box.s: src/box.cpp.s
+
+.PHONY : src/box.s
+
+# target to generate assembly for a file
+src/box.cpp.s:
+	$(MAKE) -f CMakeFiles/salmon.dir/build.make CMakeFiles/salmon.dir/src/box.cpp.s
+.PHONY : src/box.cpp.s
+
 src/common.o: src/common.cpp.o
 
 .PHONY : src/common.o
@@ -375,6 +402,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... salmon"
+	@echo "... src/box.o"
+	@echo "... src/box.i"
+	@echo "... src/box.s"
 	@echo "... src/common.o"
 	@echo "... src/common.i"
 	@echo "... src/common.s"

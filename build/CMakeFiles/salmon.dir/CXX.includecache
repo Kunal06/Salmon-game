@@ -38,6 +38,10 @@ stdint.h
 inttypes.h
 -
 
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/box.hpp
+common.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
+
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
 fstream
 -
@@ -65,6 +69,8 @@ fish.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/fish.hpp
 shark.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/shark.hpp
+box.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/box.hpp
 vector
 -
 string
