@@ -33,4 +33,10 @@ public:
 	vec2 get_bounding_box() const;
 
 	void set_advanced(bool advanced);
+	void rotate(float angle);
+
+	void set_follow_mode(bool value);
+
+private:
+	bool follow_mode = false;
 };

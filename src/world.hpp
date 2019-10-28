@@ -8,6 +8,7 @@
 #include "fish.hpp"
 #include "water.hpp"
 #include "pebbles.hpp"
+#include "box.hpp"
 
 // stlib
 #include <vector>
@@ -49,7 +50,7 @@ private:
 
 	// Generates a new shark
 	bool spawn_shark();
-	
+
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
@@ -72,6 +73,7 @@ private:
 
 	// Game entities
 	Salmon m_salmon;
+	Box m_box;
 	std::vector<Turtle> m_turtles;
 	std::vector<Fish> m_fish;
 	std::vector<Shark> m_sharks;

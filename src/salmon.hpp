@@ -5,12 +5,15 @@
 class Turtle;
 class Fish;
 class Shark;
+class box;
 
 class Salmon : public Entity
 {
 public:
 	// Creates all the associated render resources and default transform
 	bool init();
+
+	int view_port[4];
 
 	// Releases all associated resources
 	void destroy();
@@ -60,7 +63,18 @@ public:
 
 	void set_debug_mode(bool value);
 
+	bool draw_rect_init();
+	void draw_rect(int debug_mode);
+
 private:
 	float m_light_up_countdown_ms; // Used to keep track for how long the salmon should be lit up
-	bool m_is_alive;			   // True if the salmon is alive
+	bool m_is_alive;
+	
+	bool is_up = false;
+	bool is_down = false;
+	bool is_left = false;
+	bool is_right = false;
+	bool debug_mode = false;
+	bool collided = false;
+	float rotate_speed = 0.08;			   // True if the salmon is alive
 };

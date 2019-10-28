@@ -18,6 +18,7 @@ const size_t SHARK_DELAY_MS = 14000;
 bool advanced = false;
 bool debug_mode = false;
 bool collision_value = false;
+bool follow_mode = false;
 
 namespace
 {
@@ -131,7 +132,7 @@ bool World::init(vec2 screen)
 	m_current_speed = 1.f;
 	
 
-	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init() && m_water.draw_rect_init();
+	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init() && m_water.draw_rect_init() && m_box.init();
 }
 
 // Releases all the associated resources
@@ -149,6 +150,7 @@ void World::destroy()
 	Mix_CloseAudio();
 
 	m_salmon.destroy();
+	m_box.destroy();
 	m_pebbles_emitter.destroy();
 	for (auto &turtle : m_turtles)
 		turtle.destroy();
@@ -188,6 +190,7 @@ bool World::update(float elapsed_ms)
 				m_water.set_salmon_dead();
 			}
 			m_salmon.kill();
+			m_box.kill();
 			break;
 		}
 	}
@@ -219,6 +222,7 @@ bool World::update(float elapsed_ms)
 					m_water.set_salmon_dead();
 				}
 				m_salmon.kill();
+				m_box.kill();
 				break;
 			}
 		}
@@ -228,16 +232,17 @@ bool World::update(float elapsed_ms)
 	// HANDLE SALMON - WALL COLLISIONS HERE
 	// DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 2
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	collision_value = m_salmon.collides_with_wall();
-	if(debug_mode){
-		if(collision_value){
-			m_current_speed = 0.f;
-		}
-		if(m_current_speed < 1.f){
-			m_current_speed += 0.1;
+	if(m_salmon.is_alive()){
+		collision_value = m_salmon.collides_with_wall();
+		if(debug_mode){
+			if(collision_value){
+				m_current_speed = 0.f;
+			}
+			if(m_current_speed < 1.f){
+				m_current_speed += 0.1;
+			}
 		}
 	}
-	
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE PEBBLE COLLISIONS HERE
 	// DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 3
@@ -248,6 +253,9 @@ bool World::update(float elapsed_ms)
 	// In a pure ECS engine we would classify entities by their bitmap tags during the update loop
 	// rather than by their class.
 	m_salmon.update(elapsed_ms);
+	vec2 salmon_pos = m_salmon.get_position();
+	// m_box.update(elapsed_ms);
+	m_box.set_box_position(salmon_pos);
 	for (auto &turtle : m_turtles)
 		turtle.update(elapsed_ms * m_current_speed);
 	for (auto &fish : m_fish)
@@ -259,6 +267,25 @@ bool World::update(float elapsed_ms)
 			shark.update(elapsed_ms * m_current_speed);
 	}
 
+
+	// Turtle follow
+	if(follow_mode){
+		for (auto &turtle : m_turtles){
+			turtle.set_follow_mode(true);
+			vec2 turtle_pos = turtle.get_position();
+
+			// direction from turtle to salmon
+			float rotate = (GLfloat)atan2(turtle_pos.y - salmon_pos.y, turtle_pos.x - salmon_pos.x);
+			turtle.rotate(rotate);
+		}
+	}
+	else {
+		for (auto &turtle : m_turtles){
+			turtle.set_follow_mode(false);
+			vec2 turtle_pos = turtle.get_position();
+			turtle.rotate(0.f);
+		}
+	}
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE PEBBLE SPAWN/UPDATES HERE
 	// DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 3
@@ -308,7 +335,7 @@ bool World::update(float elapsed_ms)
 			++shark_it;
 		}
 	}
-
+	
 	// Spawning new turtles
 	m_next_turtle_spawn -= elapsed_ms * m_current_speed;
 	if (m_turtles.size() <= MAX_TURTLES && m_next_turtle_spawn < 0.f)
@@ -368,7 +395,9 @@ bool World::update(float elapsed_ms)
 		m_water.get_salmon_dead_time() > 5)
 	{
 		m_salmon.destroy();
+		m_box.destroy();
 		m_salmon.init();
+		m_box.init();
 		m_pebbles_emitter.destroy();
 		m_pebbles_emitter.init();
 		m_turtles.clear();
@@ -435,6 +464,7 @@ void World::draw()
 	{
 		m_water.draw_rect(1);
 		m_salmon.set_debug_mode(true);
+		m_box.draw(projection_2D);
 	}
 	else
 	{
@@ -539,8 +569,13 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 	if (action == GLFW_PRESS && key == GLFW_KEY_D)
 	{
 		debug_mode = !debug_mode;
-		fprintf(stderr, "Debug mode - %d", debug_mode );
+		// fprintf(stderr, "Debug mode - %d", debug_mode );
 
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_F)
+	{
+		follow_mode = !follow_mode;
+		fprintf(stderr, "Follow mode - %d", follow_mode );
 	}
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
@@ -548,7 +583,9 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
 		m_salmon.destroy();
+		m_box.destroy();
 		m_salmon.init();
+		m_box.init();
 		m_pebbles_emitter.destroy();
 		m_pebbles_emitter.init();
 		m_turtles.clear();
@@ -563,20 +600,24 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
 	{
 		m_salmon.set_movement("down");
+		m_box.set_movement("down");
 	}
 	else if (action == GLFW_RELEASE && key == GLFW_KEY_DOWN)
 	{
 		m_salmon.set_movement("downf");
+		m_box.set_movement("downf");
 	}
 
 	// Moving Up
 	if (action == GLFW_PRESS && key == GLFW_KEY_UP)
 	{
 		m_salmon.set_movement("up");
+		m_box.set_movement("up");
 	}
 	else if (action == GLFW_RELEASE && key == GLFW_KEY_UP)
 	{
 		m_salmon.set_movement("upf");
+		m_box.set_movement("upf");
 	}
 
 	// Moving Left
@@ -584,6 +625,7 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 	{
 
 		m_salmon.set_movement("left");
+		m_box.set_movement("left");
 		// int w, h;
 		// vec2 salmon_pos = m_salmon.get_position();
 		// vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
@@ -597,16 +639,19 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 	else if (action == GLFW_RELEASE && key == GLFW_KEY_LEFT)
 	{
 		m_salmon.set_movement("leftf");
+		m_box.set_movement("leftf");
 	}
 
 	// Moving Right
 	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
 	{
 		m_salmon.set_movement("right");
+		m_box.set_movement("right");
 	}
 	else if (action == GLFW_RELEASE && key == GLFW_KEY_RIGHT)
 	{
 		m_salmon.set_movement("rightf");
+		m_box.set_movement("rightf");
 	}
 
 	// Control the current speed with `<` `>`

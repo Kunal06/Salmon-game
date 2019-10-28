@@ -39,8 +39,8 @@ set(SOURCE_FILES
   src/shark.cpp
 	src/water.cpp
 	src/world.cpp
+  src/box.cpp
   src/pebbles.cpp
-
     src/project_path.hpp
 	src/common.hpp
 	src/fish.hpp
@@ -50,6 +50,7 @@ set(SOURCE_FILES
 	src/water.hpp
 	src/world.hpp
   src/pebbles.hpp
+  src/box.hpp
 	)
 if (IS_OS_MAC)
   include_directories(/usr/local/include)

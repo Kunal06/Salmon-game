@@ -84,18 +84,24 @@ void Turtle::update(float ms)
 	// Move fish along -X based on how much time has passed, this is to (partially) avoid
 	// having entities move at different speed based on the machine.
 	float step = -1.0 * motion.speed * (ms / 1000);
-	motion.position.x += step;
-	if (advanced)
-	{
-		if (random_movement)
+	if(follow_mode){
+		motion.position.x += step * cos(motion.radians);
+		motion.position.y += step * sin(motion.radians);
+	}
+	else {
+		motion.position.x += step;
+		if (advanced)
 		{
-			motion.position.y += step / (rand() % 4 + 1);
-			random_movement = false;
-		}
-		else
-		{
-			motion.position.y -= step / (rand() % 4 + 1);
-			random_movement = true;
+			if (random_movement)
+			{
+				motion.position.y += step / (rand() % 4 + 1);
+				random_movement = false;
+			}
+			else
+			{
+				motion.position.y -= step / (rand() % 4 + 1);
+				random_movement = true;
+			}
 		}
 	}
 }
@@ -170,4 +176,14 @@ vec2 Turtle::get_bounding_box() const
 void Turtle::set_advanced(bool adv)
 {
 	advanced = adv;
+}
+
+void Turtle::rotate(float angle)
+{
+	motion.radians = angle;
+}
+
+void Turtle::set_follow_mode(bool value)
+{
+	follow_mode = value;
 }

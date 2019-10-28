@@ -5,6 +5,7 @@
 #include "turtle.hpp"
 #include "fish.hpp"
 #include "shark.hpp"
+#include "box.hpp"
 
 // stlib
 #include <vector>
@@ -12,18 +13,13 @@
 #include <algorithm>
 #include <cmath>
 
-bool is_up = false;
-bool is_down = false;
-bool is_left = false;
-bool is_right = false;
-bool debug_mode = false;
-bool collided = false;
-float rotate_speed = 0.08;
+Box box;
 
 vec2 translation_vec;
 
 bool Salmon::init()
 {
+	// box.init();
 	std::vector<Vertex> vertices;
 	std::vector<uint16_t> indices;
 
@@ -136,18 +132,22 @@ void Salmon::update(float ms)
 		if (is_up)
 		{
 			angled_move(1.0);
+			box.angled_move(1.0);
 		}
 		else if (is_down)
 		{
 			angled_move(-1.0);
+			box.angled_move(-1.0);
 		}
 		else if (is_left)
 		{
 			rotate(-rotate_speed);
+			box.rotate(-rotate_speed);
 		}
 		else if (is_right)
 		{
 			rotate(rotate_speed);
+			box.rotate(rotate_speed);
 		}
 	}
 	else
@@ -164,7 +164,8 @@ void Salmon::update(float ms)
 void Salmon::draw(const mat3 &projection)
 {
 	transform.begin();
-
+	
+	box.draw(projection);
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// SALMON TRANSFORMATION CODE HERE
 
@@ -386,16 +387,20 @@ void Salmon::reflect(float value)
 	// float rotate = (GLfloat)atan2(motion.position.x * cs - motion.position.y * sn, motion.position.x * sn - motion.position.y * cs);
 	// fprintf(stdout, "ROTATE by %f\n", rotate);
 	float PI = 3.14159;
+	float off = 1.0;
+	if(is_down){
+		off = -1.0;
+	}
 	if (value == 1.0)
 	{
 		motion.radians = -motion.radians;
-		angled_move(1.0);
+		angled_move(off);
 
 	}
 	else if (value == 2.0)
 	{
 		motion.radians = PI - motion.radians;
-		angled_move(1.0);
+		angled_move(off);
 	}
 }
 
@@ -500,3 +505,81 @@ void Salmon::set_debug_mode(bool value)
 	debug_mode = value;
 }
 
+bool Salmon::draw_rect_init()
+{
+
+	glGetIntegerv(GL_VIEWPORT, view_port);
+	// Since we are not going to apply transformation to this screen geometry
+	// The coordinates are set to fill the standard openGL window [-1, -1 .. 1, 1]
+	// Make the size slightly larger then the screen to crop the boundary.
+	static const GLfloat screen_vertex_buffer_data[] = {
+		-1.05f, -1.05f, 0.0f,
+		1.05f, -1.05f, 0.0f,
+		-1.05f,  1.05f, 0.0f,
+		-1.05f,  1.05f, 0.0f,
+		1.05f, -1.05f, 0.0f,
+		1.05f,  1.05f, 0.0f,
+	};
+
+	// Clearing errors
+	gl_flush_errors();
+
+	// Vertex Buffer creation
+	glGenBuffers(1, &mesh.vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(screen_vertex_buffer_data), screen_vertex_buffer_data, GL_STATIC_DRAW);
+
+	if (gl_has_errors())
+		return false;
+
+	// Loading shaders
+	if (!effect.load_from_file(shader_path("box.vs.glsl"), shader_path("box.fs.glsl")))
+		return false;
+
+	return true;
+}
+
+void Salmon::draw_rect(int debug_mode){
+	// Enabling alpha channel for textures
+	glEnable(GL_BLEND); 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// Water depth at 0.0
+
+	// Setting shaders
+	glUseProgram(effect.program);
+
+	// Set screen_texture sampling to texture unit 0
+	// Set clock
+	GLuint screen_text_uloc = glGetUniformLocation(effect.program, "screen_texture");
+	GLuint time_uloc = glGetUniformLocation(effect.program, "time");
+	GLuint debug_mode_uloc = glGetUniformLocation(effect.program, "debug_mode");
+	GLuint dead_timer_uloc = glGetUniformLocation(effect.program, "dead_timer");
+	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
+	GLuint pos_x_uloc = glGetUniformLocation(effect.program, "pos_x");
+	GLuint pos_y_uloc = glGetUniformLocation(effect.program, "pos_y");
+	float color[] = {0.f, 0.f, 0.f};
+	glUniform3fv(color_uloc, 1, color);
+
+	GLuint window_width_uloc = glGetUniformLocation(effect.program, "window_width");
+	GLuint window_height_uloc = glGetUniformLocation(effect.program, "window_height");
+
+	glUniform1i(screen_text_uloc, 0);
+	glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
+	glUniform1f(dead_timer_uloc, 1);
+	glUniform1iv(debug_mode_uloc, 1, &debug_mode);
+	glUniform1i(window_width_uloc, view_port[2]);
+	glUniform1i(window_height_uloc, view_port[3]);
+	glUniform1f(pos_x_uloc, motion.position.x);
+	glUniform1f(pos_y_uloc, motion.position.y);
+	// Draw the screen texture on the quad geometry
+	// Setting vertices
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+
+	// Bind to attribute 0 (in_position) as in the vertex shader
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	// Draw
+	glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
+	glDisableVertexAttribArray(0);
+}
