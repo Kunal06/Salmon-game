@@ -286,6 +286,20 @@ bool Salmon::collides_with(const Shark &shark)
 		return true;
 	return false;
 }
+
+bool Salmon::avoid(const Fish &fish)
+{
+	float dx = motion.position.x - fish.get_position().x;
+	float dy = motion.position.y - fish.get_position().y;
+	float d_sq = dx * dx + dy * dy;
+	float other_r = std::max(fish.get_bounding_box().x, fish.get_bounding_box().y);
+	float my_r = std::max(physics.scale.x, physics.scale.y);
+	float r = std::max(other_r, my_r);
+	r *= 3.f;
+	if (d_sq < r * r)
+		return true;
+	return false;
+}
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // HANDLE SALMON - WALL COLLISIONS HERE
 // DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 2

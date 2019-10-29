@@ -132,7 +132,7 @@ bool World::init(vec2 screen)
 	m_current_speed = 1.f;
 	
 
-	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init() && m_water.draw_rect_init() && m_box.init();
+	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init() && m_water.draw_rect_init() && m_box.init() && m_redbox.init() ;
 }
 
 // Releases all the associated resources
@@ -266,7 +266,15 @@ bool World::update(float elapsed_ms)
 		for (auto &shark : m_sharks)
 			shark.update(elapsed_ms * m_current_speed);
 	}
+	// fprintf(stderr, "Salmon y position - %f\n", salmon_pos.y);
+	// Fish avoid Salmon
+	for (auto &fish : m_fish){
+		if(m_salmon.avoid(fish)){
 
+			vec2 fish_pos = fish.get_position();
+			fish.avoid_salmon(salmon_pos);
+		}
+	}
 
 	// Turtle follow
 	if(follow_mode){
@@ -465,6 +473,7 @@ void World::draw()
 		m_water.draw_rect(1);
 		m_salmon.set_debug_mode(true);
 		m_box.draw(projection_2D);
+		// m_redbox.draw(projection_2D);
 	}
 	else
 	{
@@ -575,7 +584,7 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 	if (action == GLFW_PRESS && key == GLFW_KEY_F)
 	{
 		follow_mode = !follow_mode;
-		fprintf(stderr, "Follow mode - %d", follow_mode );
+		//  fprintf(stderr, "Follow mode - %d", follow_mode );
 	}
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)

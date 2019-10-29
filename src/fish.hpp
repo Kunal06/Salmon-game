@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "redBox.hpp"
 
 // Salmon food
 class Fish : public Entity
@@ -28,7 +29,10 @@ public:
 
 	// Sets the new fish position
 	void set_position(vec2 position);
+	void avoid_salmon(vec2 salmon_pos);
 
 	// Returns the fish' bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box() const;
+private:
+		int avoid = 0;
 };

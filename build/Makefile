@@ -258,6 +258,33 @@ src/pebbles.cpp.s:
 	$(MAKE) -f CMakeFiles/salmon.dir/build.make CMakeFiles/salmon.dir/src/pebbles.cpp.s
 .PHONY : src/pebbles.cpp.s
 
+src/redBox.o: src/redBox.cpp.o
+
+.PHONY : src/redBox.o
+
+# target to build an object file
+src/redBox.cpp.o:
+	$(MAKE) -f CMakeFiles/salmon.dir/build.make CMakeFiles/salmon.dir/src/redBox.cpp.o
+.PHONY : src/redBox.cpp.o
+
+src/redBox.i: src/redBox.cpp.i
+
+.PHONY : src/redBox.i
+
+# target to preprocess a source file
+src/redBox.cpp.i:
+	$(MAKE) -f CMakeFiles/salmon.dir/build.make CMakeFiles/salmon.dir/src/redBox.cpp.i
+.PHONY : src/redBox.cpp.i
+
+src/redBox.s: src/redBox.cpp.s
+
+.PHONY : src/redBox.s
+
+# target to generate assembly for a file
+src/redBox.cpp.s:
+	$(MAKE) -f CMakeFiles/salmon.dir/build.make CMakeFiles/salmon.dir/src/redBox.cpp.s
+.PHONY : src/redBox.cpp.s
+
 src/salmon.o: src/salmon.cpp.o
 
 .PHONY : src/salmon.o
@@ -417,6 +444,9 @@ help:
 	@echo "... src/pebbles.o"
 	@echo "... src/pebbles.i"
 	@echo "... src/pebbles.s"
+	@echo "... src/redBox.o"
+	@echo "... src/redBox.i"
+	@echo "... src/redBox.s"
 	@echo "... src/salmon.o"
 	@echo "... src/salmon.i"
 	@echo "... src/salmon.s"

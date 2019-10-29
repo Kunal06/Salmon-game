@@ -30,6 +30,8 @@ public:
 	bool collides_with(const Fish &fish);
 	bool collides_with(const Shark &shark);
 
+	bool avoid(const Fish &fish);
+
 	bool collides_with_wall();
 	// Returns the current salmon position
 	vec2 get_position() const;

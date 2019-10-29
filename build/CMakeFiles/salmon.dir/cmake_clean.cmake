@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/salmon.dir/src/fish.cpp.o"
   "CMakeFiles/salmon.dir/src/main.cpp.o"
   "CMakeFiles/salmon.dir/src/pebbles.cpp.o"
+  "CMakeFiles/salmon.dir/src/redBox.cpp.o"
   "CMakeFiles/salmon.dir/src/salmon.cpp.o"
   "CMakeFiles/salmon.dir/src/shark.cpp.o"
   "CMakeFiles/salmon.dir/src/turtle.cpp.o"

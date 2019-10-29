@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/fish.cpp" "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/build/CMakeFiles/salmon.dir/src/fish.cpp.o"
   "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/main.cpp" "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/build/CMakeFiles/salmon.dir/src/main.cpp.o"
   "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/pebbles.cpp" "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/build/CMakeFiles/salmon.dir/src/pebbles.cpp.o"
+  "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/redBox.cpp" "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/build/CMakeFiles/salmon.dir/src/redBox.cpp.o"
   "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/salmon.cpp" "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/build/CMakeFiles/salmon.dir/src/salmon.cpp.o"
   "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/shark.cpp" "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/build/CMakeFiles/salmon.dir/src/shark.cpp.o"
   "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/turtle.cpp" "/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/build/CMakeFiles/salmon.dir/src/turtle.cpp.o"

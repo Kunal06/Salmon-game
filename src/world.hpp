@@ -9,6 +9,7 @@
 #include "water.hpp"
 #include "pebbles.hpp"
 #include "box.hpp"
+#include "redBox.hpp"
 
 // stlib
 #include <vector>
@@ -74,6 +75,7 @@ private:
 	// Game entities
 	Salmon m_salmon;
 	Box m_box;
+	RedBox m_redbox;
 	std::vector<Turtle> m_turtles;
 	std::vector<Fish> m_fish;
 	std::vector<Shark> m_sharks;

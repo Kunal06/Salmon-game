@@ -86,8 +86,14 @@ void Fish::update(float ms)
 	// Move fish along -X based on how much time has passed, this is to (partially) avoid
 	// having entities move at different speed based on the machine.
 	float step = -1.0 * motion.speed * (ms / 1000);
-	motion.position.x += step;
 
+	if (avoid == 0){
+		motion.position.x += step;
+	}
+	else {
+		motion.position.y += avoid * step;
+		avoid = 0;
+	}
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE FISH AI HERE
 	// DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 2
@@ -154,6 +160,26 @@ vec2 Fish::get_position() const
 void Fish::set_position(vec2 position)
 {
 	motion.position = position;
+}
+
+void Fish::avoid_salmon(vec2 salmon_pos)
+{	
+	int off = 80;
+	avoid = 0;
+	if(motion.position.y < salmon_pos.y && motion.position.y >= salmon_pos.y - off){
+		// move up
+		avoid = 1;
+	}
+	else if(motion.position.y >= salmon_pos.y && motion.position.y <= salmon_pos.y + off)
+	{
+		// move down
+		avoid = -1;
+	}
+	else 
+	{
+		avoid = 0;
+	}
+	
 }
 
 vec2 Fish::get_bounding_box() const

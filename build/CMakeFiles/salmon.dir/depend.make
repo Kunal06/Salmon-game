@@ -23,6 +23,7 @@ CMakeFiles/salmon.dir/src/fish.cpp.o: ../src/common.hpp
 CMakeFiles/salmon.dir/src/fish.cpp.o: ../src/fish.cpp
 CMakeFiles/salmon.dir/src/fish.cpp.o: ../src/fish.hpp
 CMakeFiles/salmon.dir/src/fish.cpp.o: ../src/project_path.hpp
+CMakeFiles/salmon.dir/src/fish.cpp.o: ../src/redBox.hpp
 CMakeFiles/salmon.dir/src/fish.cpp.o: /usr/local/include/GLFW/glfw3.h
 
 CMakeFiles/salmon.dir/src/main.cpp.o: ../ext/gl3w/gl3w.h
@@ -33,6 +34,7 @@ CMakeFiles/salmon.dir/src/main.cpp.o: ../src/fish.hpp
 CMakeFiles/salmon.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/salmon.dir/src/main.cpp.o: ../src/pebbles.hpp
 CMakeFiles/salmon.dir/src/main.cpp.o: ../src/project_path.hpp
+CMakeFiles/salmon.dir/src/main.cpp.o: ../src/redBox.hpp
 CMakeFiles/salmon.dir/src/main.cpp.o: ../src/salmon.hpp
 CMakeFiles/salmon.dir/src/main.cpp.o: ../src/shark.hpp
 CMakeFiles/salmon.dir/src/main.cpp.o: ../src/turtle.hpp
@@ -94,12 +96,21 @@ CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../src/pebbles.hpp
 CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../src/project_path.hpp
 CMakeFiles/salmon.dir/src/pebbles.cpp.o: /usr/local/include/GLFW/glfw3.h
 
+CMakeFiles/salmon.dir/src/redBox.cpp.o: ../ext/gl3w/gl3w.h
+CMakeFiles/salmon.dir/src/redBox.cpp.o: ../ext/gl3w/glcorearb.h
+CMakeFiles/salmon.dir/src/redBox.cpp.o: ../src/common.hpp
+CMakeFiles/salmon.dir/src/redBox.cpp.o: ../src/project_path.hpp
+CMakeFiles/salmon.dir/src/redBox.cpp.o: ../src/redBox.cpp
+CMakeFiles/salmon.dir/src/redBox.cpp.o: ../src/redBox.hpp
+CMakeFiles/salmon.dir/src/redBox.cpp.o: /usr/local/include/GLFW/glfw3.h
+
 CMakeFiles/salmon.dir/src/salmon.cpp.o: ../ext/gl3w/gl3w.h
 CMakeFiles/salmon.dir/src/salmon.cpp.o: ../ext/gl3w/glcorearb.h
 CMakeFiles/salmon.dir/src/salmon.cpp.o: ../src/box.hpp
 CMakeFiles/salmon.dir/src/salmon.cpp.o: ../src/common.hpp
 CMakeFiles/salmon.dir/src/salmon.cpp.o: ../src/fish.hpp
 CMakeFiles/salmon.dir/src/salmon.cpp.o: ../src/project_path.hpp
+CMakeFiles/salmon.dir/src/salmon.cpp.o: ../src/redBox.hpp
 CMakeFiles/salmon.dir/src/salmon.cpp.o: ../src/salmon.cpp
 CMakeFiles/salmon.dir/src/salmon.cpp.o: ../src/salmon.hpp
 CMakeFiles/salmon.dir/src/salmon.cpp.o: ../src/shark.hpp
@@ -137,6 +148,7 @@ CMakeFiles/salmon.dir/src/world.cpp.o: ../src/common.hpp
 CMakeFiles/salmon.dir/src/world.cpp.o: ../src/fish.hpp
 CMakeFiles/salmon.dir/src/world.cpp.o: ../src/pebbles.hpp
 CMakeFiles/salmon.dir/src/world.cpp.o: ../src/project_path.hpp
+CMakeFiles/salmon.dir/src/world.cpp.o: ../src/redBox.hpp
 CMakeFiles/salmon.dir/src/world.cpp.o: ../src/salmon.hpp
 CMakeFiles/salmon.dir/src/world.cpp.o: ../src/shark.hpp
 CMakeFiles/salmon.dir/src/world.cpp.o: ../src/turtle.hpp
