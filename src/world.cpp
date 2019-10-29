@@ -470,9 +470,26 @@ void World::draw()
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	if(debug_mode)
 	{
+		int off = 120;
 		m_water.draw_rect(1);
 		m_salmon.set_debug_mode(true);
 		m_box.draw(projection_2D);
+		for (auto &fish : m_fish){
+			vec2 fish_pos = fish.get_position();
+			while(fish_pos.x > 90){
+				fish_pos.x -= off;
+				vec2 box_position = {fish_pos.x, fish_pos.y};
+				vec2 salmon_pos = m_salmon.get_position();
+				// check if box collides with salmon
+				m_redbox.set_box_position(box_position);
+
+				if((fish_pos.x - salmon_pos.x) < 160){
+					m_redbox.avoid_salmon(m_salmon.get_position());
+				}
+				m_redbox.draw(projection_2D);
+			}
+		}
+
 		// m_redbox.draw(projection_2D);
 	}
 	else

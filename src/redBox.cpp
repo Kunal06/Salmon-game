@@ -395,3 +395,26 @@ void RedBox::set_box_position(vec2 off)
 	motion.position.y = off.y;
 }
 
+void RedBox::avoid_salmon(vec2 salmon_pos)
+{	
+	int off = 90;
+	box_avoid = 0;
+	if(motion.position.y < salmon_pos.y && motion.position.y >= salmon_pos.y - off){
+		// move up
+		// fprintf(stderr, "Move up\n");
+		box_avoid = salmon_pos.y - off - motion.position.y;
+	}
+	else if(motion.position.y >= salmon_pos.y && motion.position.y <= salmon_pos.y + off)
+	{
+		// move down
+		// fprintf(stderr, "Move down\n");
+		box_avoid = salmon_pos.y + off - motion.position.y ;
+	}
+	else 
+	{
+		box_avoid = 0;
+	}
+	// fprintf(stderr, "Box avoid - %d\n", box_avoid);
+	motion.position.y += box_avoid;
+	
+}

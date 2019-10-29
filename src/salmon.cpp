@@ -132,22 +132,22 @@ void Salmon::update(float ms)
 		if (is_up)
 		{
 			angled_move(1.0);
-			box.angled_move(1.0);
+			//box.angled_move(1.0);
 		}
 		else if (is_down)
 		{
 			angled_move(-1.0);
-			box.angled_move(-1.0);
+			//box.angled_move(-1.0);
 		}
 		else if (is_left)
 		{
 			rotate(-rotate_speed);
-			box.rotate(-rotate_speed);
+			//box.rotate(-rotate_speed);
 		}
 		else if (is_right)
 		{
 			rotate(rotate_speed);
-			box.rotate(rotate_speed);
+			//box.rotate(rotate_speed);
 		}
 	}
 	else
@@ -295,7 +295,7 @@ bool Salmon::avoid(const Fish &fish)
 	float other_r = std::max(fish.get_bounding_box().x, fish.get_bounding_box().y);
 	float my_r = std::max(physics.scale.x, physics.scale.y);
 	float r = std::max(other_r, my_r);
-	r *= 3.f;
+	r *= 1.8f;
 	if (d_sq < r * r)
 		return true;
 	return false;

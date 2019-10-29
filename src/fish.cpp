@@ -4,9 +4,10 @@
 #include <cmath>
 
 Texture Fish::fish_texture;
+RedBox red_box;
 
 bool Fish::init()
-{
+{	
 	// Load shared texture
 	if (!fish_texture.is_valid())
 	{
@@ -65,7 +66,6 @@ bool Fish::init()
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture.
 	physics.scale = {-0.4f, 0.4f};
-
 	return true;
 }
 
@@ -164,7 +164,7 @@ void Fish::set_position(vec2 position)
 
 void Fish::avoid_salmon(vec2 salmon_pos)
 {	
-	int off = 80;
+	int off = 90;
 	avoid = 0;
 	if(motion.position.y < salmon_pos.y && motion.position.y >= salmon_pos.y - off){
 		// move up
@@ -188,3 +188,7 @@ vec2 Fish::get_bounding_box() const
 	// fabs is to avoid negative scale due to the facing direction.
 	return {std::fabs(physics.scale.x) * fish_texture.width, std::fabs(physics.scale.y) * fish_texture.height};
 }
+
+
+
+

@@ -54,6 +54,7 @@ public:
 	void set_debug_mode(bool value);
 
 	void set_box_position(vec2 off);
+	void avoid_salmon(vec2 salmon_pos);
 
 private:
 	bool m_is_alive = false;
@@ -66,6 +67,7 @@ private:
 	bool debug_mode = false;
 	bool collided = false;
 	float rotate_speed = 0.08;
+	int box_avoid = 0;
 
 	vec2 translation_vec;
 };

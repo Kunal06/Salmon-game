@@ -65,7 +65,7 @@ bool Box::init()
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture.
-	physics.scale = {-0.6f, 0.6f};
+	physics.scale = {-0.5f, 0.5f};
 
 	return true;
 }
