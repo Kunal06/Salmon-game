@@ -7,7 +7,7 @@ Texture Fish::fish_texture;
 RedBox red_box;
 
 bool Fish::init()
-{	
+{
 	// Load shared texture
 	if (!fish_texture.is_valid())
 	{
@@ -61,7 +61,7 @@ bool Fish::init()
 		return false;
 
 	motion.radians = 0.f;
-	motion.speed = 170.f;
+	motion.speed = 300.f;
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture.
@@ -87,10 +87,12 @@ void Fish::update(float ms)
 	// having entities move at different speed based on the machine.
 	float step = -1.0 * motion.speed * (ms / 1000);
 
-	if (avoid == 0){
+	if (avoid == 0)
+	{
 		motion.position.x += step;
 	}
-	else {
+	else
+	{
 		motion.position.y += avoid * step;
 		avoid = 0;
 	}
@@ -163,23 +165,23 @@ void Fish::set_position(vec2 position)
 }
 
 void Fish::avoid_salmon(vec2 salmon_pos)
-{	
+{
 	int off = 90;
 	avoid = 0;
-	if(motion.position.y < salmon_pos.y && motion.position.y >= salmon_pos.y - off){
+	if (motion.position.y < salmon_pos.y && motion.position.y >= salmon_pos.y - off)
+	{
 		// move up
 		avoid = 1;
 	}
-	else if(motion.position.y >= salmon_pos.y && motion.position.y <= salmon_pos.y + off)
+	else if (motion.position.y >= salmon_pos.y && motion.position.y <= salmon_pos.y + off)
 	{
 		// move down
 		avoid = -1;
 	}
-	else 
+	else
 	{
 		avoid = 0;
 	}
-	
 }
 
 vec2 Fish::get_bounding_box() const
@@ -189,6 +191,12 @@ vec2 Fish::get_bounding_box() const
 	return {std::fabs(physics.scale.x) * fish_texture.width, std::fabs(physics.scale.y) * fish_texture.height};
 }
 
-
-
-
+void Fish::set_advanced(bool advanced)
+{
+	if (advanced)
+		motion.speed = 380;
+	else
+	{
+		motion.speed = 100;
+	}
+}

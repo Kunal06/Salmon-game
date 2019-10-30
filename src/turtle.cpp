@@ -58,7 +58,7 @@ bool Turtle::init()
 		return false;
 
 	motion.radians = 0.f;
-	motion.speed = 70.f;
+	motion.speed = 200.f;
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture.
@@ -84,11 +84,13 @@ void Turtle::update(float ms)
 	// Move fish along -X based on how much time has passed, this is to (partially) avoid
 	// having entities move at different speed based on the machine.
 	float step = -1.0 * motion.speed * (ms / 1000);
-	if(follow_mode){
+	if (follow_mode)
+	{
 		motion.position.x += step * cos(motion.radians);
 		motion.position.y += step * sin(motion.radians);
 	}
-	else {
+	else
+	{
 		motion.position.x += step;
 		if (advanced)
 		{
@@ -186,4 +188,8 @@ void Turtle::rotate(float angle)
 void Turtle::set_follow_mode(bool value)
 {
 	follow_mode = value;
+	if (follow_mode)
+		motion.speed = 100.f;
+	else
+		motion.speed = 200.f;
 }

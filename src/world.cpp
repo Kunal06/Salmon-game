@@ -9,16 +9,18 @@
 // Same as static in c, local to compilation unit
 namespace
 {
-const size_t MAX_TURTLES = 15;
+int MAX_TURTLES = 15;
 const size_t MAX_FISH = 5;
-const size_t TURTLE_DELAY_MS = 4000;
-const size_t FISH_DELAY_MS = 6000;
+const size_t TURTLE_DELAY_MS = 2000;
+const size_t FISH_DELAY_MS = 5000;
 const size_t MAX_SHARKS = 5;
-const size_t SHARK_DELAY_MS = 14000;
+const size_t SHARK_DELAY_MS = 12000;
 bool advanced = false;
 bool debug_mode = false;
 bool collision_value = false;
 bool follow_mode = false;
+int X_frames = 0;
+int FRAME_LIMIT = 0;
 
 namespace
 {
@@ -130,9 +132,8 @@ bool World::init(vec2 screen)
 	fprintf(stderr, "Loaded music\n");
 
 	m_current_speed = 1.f;
-	
 
-	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init() && m_water.draw_rect_init() && m_box.init() && m_redbox.init() ;
+	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init() && m_water.draw_rect_init() && m_box.init() && m_redbox.init();
 }
 
 // Releases all the associated resources
@@ -232,13 +233,17 @@ bool World::update(float elapsed_ms)
 	// HANDLE SALMON - WALL COLLISIONS HERE
 	// DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 2
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	if(m_salmon.is_alive()){
+	if (m_salmon.is_alive())
+	{
 		collision_value = m_salmon.collides_with_wall();
-		if(debug_mode){
-			if(collision_value){
+		if (debug_mode)
+		{
+			if (collision_value)
+			{
 				m_current_speed = 0.f;
 			}
-			if(m_current_speed < 1.f){
+			if (m_current_speed < 1.f)
+			{
 				m_current_speed += 0.1;
 			}
 		}
@@ -259,7 +264,10 @@ bool World::update(float elapsed_ms)
 	for (auto &turtle : m_turtles)
 		turtle.update(elapsed_ms * m_current_speed);
 	for (auto &fish : m_fish)
+	{
 		fish.update(elapsed_ms * m_current_speed);
+		fish.set_advanced(advanced);
+	}
 	if (advanced)
 	{
 		// Shark Added
@@ -268,17 +276,25 @@ bool World::update(float elapsed_ms)
 	}
 	// fprintf(stderr, "Salmon y position - %f\n", salmon_pos.y);
 	// Fish avoid Salmon
-	for (auto &fish : m_fish){
-		if(m_salmon.avoid(fish)){
+	// if (X_frames == FRAME_LIMIT)
+	// {
+	for (auto &fish : m_fish)
+	{
+		if (m_salmon.avoid(fish))
+		{
 
 			vec2 fish_pos = fish.get_position();
 			fish.avoid_salmon(salmon_pos);
 		}
 	}
+	//}
 
 	// Turtle follow
-	if(follow_mode){
-		for (auto &turtle : m_turtles){
+	if (follow_mode)
+	{
+		MAX_TURTLES = 5;
+		for (auto &turtle : m_turtles)
+		{
 			turtle.set_follow_mode(true);
 			vec2 turtle_pos = turtle.get_position();
 
@@ -287,8 +303,11 @@ bool World::update(float elapsed_ms)
 			turtle.rotate(rotate);
 		}
 	}
-	else {
-		for (auto &turtle : m_turtles){
+	else
+	{
+		MAX_TURTLES = 15;
+		for (auto &turtle : m_turtles)
+		{
 			turtle.set_follow_mode(false);
 			vec2 turtle_pos = turtle.get_position();
 			turtle.rotate(0.f);
@@ -343,7 +362,7 @@ bool World::update(float elapsed_ms)
 			++shark_it;
 		}
 	}
-	
+
 	// Spawning new turtles
 	m_next_turtle_spawn -= elapsed_ms * m_current_speed;
 	if (m_turtles.size() <= MAX_TURTLES && m_next_turtle_spawn < 0.f)
@@ -402,6 +421,9 @@ bool World::update(float elapsed_ms)
 	if (!m_salmon.is_alive() &&
 		m_water.get_salmon_dead_time() > 5)
 	{
+		follow_mode = false;
+		debug_mode = false;
+		advanced = false;
 		m_salmon.destroy();
 		m_box.destroy();
 		m_salmon.init();
@@ -468,24 +490,36 @@ void World::draw()
 	// relevant information to your debug draw call.
 	// The shaders coloured.vs.glsl and coloured.fs.glsl should be helpful.
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	if(debug_mode)
+	if (debug_mode)
 	{
 		int off = 120;
 		m_water.draw_rect(1);
 		m_salmon.set_debug_mode(true);
 		m_box.draw(projection_2D);
-		for (auto &fish : m_fish){
+		if (m_salmon.collides_with_wall())
+		{
+			// fprintf(stderr, "DRAW collision point");
+			m_redbox.set_box_position(m_salmon.get_position());
+			m_redbox.draw(projection_2D);
+		}
+		for (auto &fish : m_fish)
+		{
 			vec2 fish_pos = fish.get_position();
-			while(fish_pos.x > 90){
+			while (fish_pos.x > 90)
+			{
 				fish_pos.x -= off;
 				vec2 box_position = {fish_pos.x, fish_pos.y};
 				vec2 salmon_pos = m_salmon.get_position();
 				// check if box collides with salmon
 				m_redbox.set_box_position(box_position);
-
-				if((fish_pos.x - salmon_pos.x) < 160){
+				// if (X_frames == FRAME_LIMIT)
+				// {
+				if ((fish_pos.x - salmon_pos.x) < 160)
+				{
 					m_redbox.avoid_salmon(m_salmon.get_position());
 				}
+				X_frames = 0;
+				//  }
 				m_redbox.draw(projection_2D);
 			}
 		}
@@ -497,7 +531,8 @@ void World::draw()
 		m_water.draw_rect(0);
 		m_salmon.set_debug_mode(false);
 	}
-	
+	// if (X_frames != FRAME_LIMIT)
+	// 	X_frames++;
 
 	// Drawing entities
 	for (auto &turtle : m_turtles)
@@ -594,9 +629,9 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_D)
 	{
-		debug_mode = !debug_mode;
+		if (m_salmon.is_alive())
+			debug_mode = !debug_mode;
 		// fprintf(stderr, "Debug mode - %d", debug_mode );
-
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_F)
 	{
@@ -687,6 +722,12 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 		m_current_speed += 0.1f;
 
 	m_current_speed = fmax(0.f, m_current_speed);
+
+	if (action == GLFW_RELEASE && key == GLFW_KEY_MINUS)
+		FRAME_LIMIT -= 1;
+	if (action == GLFW_RELEASE && key == GLFW_KEY_EQUAL)
+		FRAME_LIMIT += 1;
+	FRAME_LIMIT = fmax(0, FRAME_LIMIT);
 }
 
 void World::on_mouse_move(GLFWwindow *window, double xpos, double ypos)
@@ -704,4 +745,3 @@ void World::on_mouse_move(GLFWwindow *window, double xpos, double ypos)
 
 	// m_salmon.set_rotation(rotate);
 }
-

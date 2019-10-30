@@ -15,14 +15,14 @@ public:
 
 	// Releases all the associated resources
 	void destroy();
-	
+
 	// Update fish
 	// ms represents the number of milliseconds elapsed from the previous update() call
 	void update(float ms);
 
 	// Renders the fish
 	// projection is the 2D orthographic projection matrix
-	void draw(const mat3& projection) override;
+	void draw(const mat3 &projection) override;
 
 	// Returns the current fish position
 	vec2 get_position() const;
@@ -31,8 +31,11 @@ public:
 	void set_position(vec2 position);
 	void avoid_salmon(vec2 salmon_pos);
 
+	void set_advanced(bool advanced);
+
 	// Returns the fish' bounding box for collision detection, called by collides_with()
 	vec2 get_bounding_box() const;
+
 private:
-		int avoid = 0;
+	int avoid = 0;
 };

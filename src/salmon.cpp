@@ -117,9 +117,11 @@ void Salmon::update(float ms)
 	vec2 down_vec = {0.f, 10.f};
 	vec2 left_vec = {-10.f, 0.f};
 	vec2 right_vec = {10.f, 0.f};
-	
-	if(debug_mode){
-		if(motion.speed < 20){
+
+	if (debug_mode)
+	{
+		if (motion.speed < 20)
+		{
 			motion.speed += 0.2;
 		}
 	}
@@ -164,8 +166,8 @@ void Salmon::update(float ms)
 void Salmon::draw(const mat3 &projection)
 {
 	transform.begin();
-	
-	box.draw(projection);
+
+	//box.draw(projection);
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// SALMON TRANSFORMATION CODE HERE
 
@@ -311,18 +313,20 @@ bool Salmon::collides_with_wall()
 {
 	vec2 screen = {1200, 800};
 	vec2 pos = motion.position;
-	int offset_verticle = 100;
-	int offset_horizontal = 120;
-	if (debug_mode && collided){
+	int offset_verticle = 90;
+	int offset_horizontal = 110;
+	if (debug_mode && collided)
+	{
 		// rotate_speed = 0.0;
 		motion.speed = 2.0;
 	}
-	if(debug_mode){
-		offset_verticle = 120;
-		offset_horizontal = 140;
-		}
+	if (debug_mode)
+	{
+		offset_verticle = 110;
+		offset_horizontal = 120;
+	}
 	// top boundary (0,0) to (1200,0)
-	if ((pos.y - offset_verticle > 0 && pos.y + offset_verticle < screen.y) && (pos.x - offset_horizontal > 0 && pos.x + offset_horizontal < screen.x ))
+	if ((pos.y - offset_verticle > 0 && pos.y + offset_verticle < screen.y) && (pos.x - offset_horizontal > 0 && pos.x + offset_horizontal < screen.x))
 	{
 		// fprintf(stdout, "right Wall hit\n");
 		collided = false;
@@ -351,9 +355,8 @@ bool Salmon::collides_with_wall()
 		reflect(2.0);
 		collided = true;
 	}
-	if(debug_mode && collided)
+	if (debug_mode && collided)
 		glfwWaitEventsTimeout(80.0);
-
 
 	return collided;
 }
@@ -402,14 +405,14 @@ void Salmon::reflect(float value)
 	// fprintf(stdout, "ROTATE by %f\n", rotate);
 	float PI = 3.14159;
 	float off = 1.0;
-	if(is_down){
+	if (is_down)
+	{
 		off = -1.0;
 	}
 	if (value == 1.0)
 	{
 		motion.radians = -motion.radians;
 		angled_move(off);
-
 	}
 	else if (value == 2.0)
 	{
@@ -527,12 +530,24 @@ bool Salmon::draw_rect_init()
 	// The coordinates are set to fill the standard openGL window [-1, -1 .. 1, 1]
 	// Make the size slightly larger then the screen to crop the boundary.
 	static const GLfloat screen_vertex_buffer_data[] = {
-		-1.05f, -1.05f, 0.0f,
-		1.05f, -1.05f, 0.0f,
-		-1.05f,  1.05f, 0.0f,
-		-1.05f,  1.05f, 0.0f,
-		1.05f, -1.05f, 0.0f,
-		1.05f,  1.05f, 0.0f,
+		-1.05f,
+		-1.05f,
+		0.0f,
+		1.05f,
+		-1.05f,
+		0.0f,
+		-1.05f,
+		1.05f,
+		0.0f,
+		-1.05f,
+		1.05f,
+		0.0f,
+		1.05f,
+		-1.05f,
+		0.0f,
+		1.05f,
+		1.05f,
+		0.0f,
 	};
 
 	// Clearing errors
@@ -553,9 +568,10 @@ bool Salmon::draw_rect_init()
 	return true;
 }
 
-void Salmon::draw_rect(int debug_mode){
+void Salmon::draw_rect(int debug_mode)
+{
 	// Enabling alpha channel for textures
-	glEnable(GL_BLEND); 
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// Water depth at 0.0
 
@@ -591,7 +607,7 @@ void Salmon::draw_rect(int debug_mode){
 
 	// Bind to attribute 0 (in_position) as in the vertex shader
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
 
 	// Draw
 	glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
