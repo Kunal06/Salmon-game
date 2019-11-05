@@ -11,6 +11,8 @@ namespace
 {
 int MAX_TURTLES = 15;
 const size_t MAX_FISH = 5;
+const size_t MAX_PEBBLES = 5;
+const size_t PEBBLES_DELAY_MS = 500;
 const size_t TURTLE_DELAY_MS = 2000;
 const size_t FISH_DELAY_MS = 5000;
 const size_t MAX_SHARKS = 5;
@@ -19,6 +21,7 @@ bool advanced = false;
 bool debug_mode = false;
 bool collision_value = false;
 bool follow_mode = false;
+bool spawn_pebbles = false;
 int X_frames = 0;
 int FRAME_LIMIT = 0;
 
@@ -133,7 +136,7 @@ bool World::init(vec2 screen)
 
 	m_current_speed = 1.f;
 
-	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init() && m_water.draw_rect_init() && m_box.init() && m_redbox.init();
+	return m_salmon.init() && m_water.init() && m_water.draw_rect_init() && m_box.init() && m_redbox.init() && m_pebbles_emitter.init();
 }
 
 // Releases all the associated resources
@@ -258,6 +261,7 @@ bool World::update(float elapsed_ms)
 	// In a pure ECS engine we would classify entities by their bitmap tags during the update loop
 	// rather than by their class.
 	m_salmon.update(elapsed_ms);
+	m_pebbles_emitter.update(elapsed_ms);
 	vec2 salmon_pos = m_salmon.get_position();
 	// m_box.update(elapsed_ms);
 	m_box.set_box_position(salmon_pos);
@@ -317,7 +321,13 @@ bool World::update(float elapsed_ms)
 	// HANDLE PEBBLE SPAWN/UPDATES HERE
 	// DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 3
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+	// Spawning new Pebbles
+	if (spawn_pebbles)
+	{
+		fprintf(stderr, "spawn pebble called");
+		m_pebbles_emitter.spawn_pebble(m_salmon.get_position());
+		spawn_pebbles = false;
+	}
 	// Removing out of screen turtles
 	auto turtle_it = m_turtles.begin();
 	while (turtle_it != m_turtles.end())
@@ -490,6 +500,7 @@ void World::draw()
 	// relevant information to your debug draw call.
 	// The shaders coloured.vs.glsl and coloured.fs.glsl should be helpful.
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 	if (debug_mode)
 	{
 		int off = 120;
@@ -533,7 +544,6 @@ void World::draw()
 	}
 	// if (X_frames != FRAME_LIMIT)
 	// 	X_frames++;
-
 	// Drawing entities
 	for (auto &turtle : m_turtles)
 		turtle.draw(projection_2D);
@@ -546,7 +556,7 @@ void World::draw()
 			shark.draw(projection_2D);
 	}
 	m_salmon.draw(projection_2D);
-
+	m_pebbles_emitter.draw(projection_2D);
 	/////////////////////
 	// Truely render to the screen
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -637,6 +647,14 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 	{
 		follow_mode = !follow_mode;
 		//  fprintf(stderr, "Follow mode - %d", follow_mode );
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE)
+	{
+		spawn_pebbles = true;
+	}
+	if (action == GLFW_RELEASE && key == GLFW_KEY_SPACE)
+	{
+		spawn_pebbles = false;
 	}
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)

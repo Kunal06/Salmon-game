@@ -40,7 +40,7 @@ public:
 	void draw();
 
 	// Should the game be over ?
-	bool is_over()const;
+	bool is_over() const;
 
 private:
 	// Generates a new turtle
@@ -53,12 +53,12 @@ private:
 	bool spawn_shark();
 
 	// !!! INPUT CALLBACK FUNCTIONS
-	void on_key(GLFWwindow*, int key, int, int action, int mod);
-	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
+	void on_key(GLFWwindow *, int key, int, int action, int mod);
+	void on_mouse_move(GLFWwindow *window, double xpos, double ypos);
 
 private:
 	// Window handle
-	GLFWwindow* m_window;
+	GLFWwindow *m_window;
 	float m_screen_scale; // Screen to pixel coordinates scale factor
 
 	// Screen texture
@@ -86,9 +86,9 @@ private:
 	float m_next_fish_spawn;
 	float m_next_shark_spawn;
 
-	Mix_Music* m_background_music;
-	Mix_Chunk* m_salmon_dead_sound;
-	Mix_Chunk* m_salmon_eat_sound;
+	Mix_Music *m_background_music;
+	Mix_Chunk *m_salmon_dead_sound;
+	Mix_Chunk *m_salmon_eat_sound;
 
 	// C++ rng
 	std::default_random_engine m_rng;
