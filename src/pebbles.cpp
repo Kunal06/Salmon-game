@@ -98,8 +98,8 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 		fprintf(stderr, "\nPebble - update - %f \n ", direction);
 
 		Pebble peb;
-		peb.position.x = position.x;
-		peb.position.y = position.y;
+		peb.position.x = position.x + 55 * cos(angle);
+		peb.position.y = position.y + 55 * sin(angle);
 		peb.radius = 10;
 		peb.velocity.x = motion.speed;
 		peb.velocity.y = motion.speed;
