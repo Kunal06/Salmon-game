@@ -94,15 +94,15 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 		float MAX = angle + PI / 2;
 		float MIN = angle - PI / 2;
 		float direction = (float(rand()) / (float(RAND_MAX) / (MAX - MIN))) + MIN;
-		float velocity = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (50 - (0))));
-		fprintf(stderr, "\nPebble - update - %f \n ", direction);
+		float velocity = (float(rand()) / (float(RAND_MAX) / (100.f - 10.f))) + 30.f;
+		fprintf(stderr, "\nPebble - update - %f \n ", velocity);
 
 		Pebble peb;
 		peb.position.x = position.x + 55 * cos(angle);
 		peb.position.y = position.y + 55 * sin(angle);
 		peb.radius = 10;
-		peb.velocity.x = motion.speed;
-		peb.velocity.y = motion.speed;
+		peb.velocity.x = velocity;
+		peb.velocity.y = velocity;
 		peb.angle = direction;
 		m_pebbles.emplace_back(peb);
 		COOLDOWN = 4;
