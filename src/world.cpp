@@ -324,9 +324,8 @@ bool World::update(float elapsed_ms)
 	// Spawning new Pebbles
 	if (spawn_pebbles)
 	{
-		fprintf(stderr, "spawn pebble called");
-		m_pebbles_emitter.spawn_pebble(m_salmon.get_position());
-		spawn_pebbles = false;
+		//fprintf(stderr, "spawn pebble called");
+		m_pebbles_emitter.spawn_pebble(m_salmon.get_position(), m_salmon.get_rotation());
 	}
 	// Removing out of screen turtles
 	auto turtle_it = m_turtles.begin();

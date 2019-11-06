@@ -378,6 +378,11 @@ void Salmon::set_rotation(float radians)
 	motion.radians = radians;
 }
 
+float Salmon::get_rotation()
+{
+	return motion.radians;
+}
+
 void Salmon::rotate(float off)
 {
 	// move in direction

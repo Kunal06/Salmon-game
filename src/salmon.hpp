@@ -43,9 +43,10 @@ public:
 
 	// Set salmon rotation in radians
 	void set_rotation(float radians);
+	float get_rotation();
 
-	// Set salmon rotation in radians
-	void rotate(float off);
+		// Set salmon rotation in radians
+		void rotate(float off);
 	void reflect(float value);
 	void angled_move(float off);
 	// True if the salmon is alive

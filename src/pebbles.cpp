@@ -9,6 +9,8 @@
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 static const int MAX_PEBBLES = 25;
+static const int MAX_COOLDOWN = 20;
+int COOLDOWN = 0;
 constexpr int NUM_SEGMENTS = 12;
 
 bool Pebbles::init()
@@ -48,7 +50,7 @@ bool Pebbles::init()
 	// Loading shaders
 	if (!effect.load_from_file(shader_path("pebble.vs.glsl"), shader_path("pebble.fs.glsl")))
 		return false;
-
+	motion.speed = 100.f;
 	return true;
 }
 
@@ -74,24 +76,42 @@ void Pebbles::update(float ms)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	for (auto &pebble : m_pebbles)
 	{
-		fprintf(stderr, "\nPebble - update - %f \n ", pebble.velocity.x);
+		// fprintf(stderr, "\nPebble - update - %f \n ", pebble.angle);
 		float step = 1.0 * pebble.velocity.x * (ms / 1000);
-		pebble.position.x += step;
+		pebble.position.x += step * cos(pebble.angle);
+		pebble.position.y += step * sin(pebble.angle);
 	}
 }
 
-void Pebbles::spawn_pebble(vec2 position)
+void Pebbles::spawn_pebble(vec2 position, float angle)
 {
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE PEBBLE SPAWNING HERE
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	Pebble peb;
-	peb.position.x = position.x;
-	peb.position.y = position.y;
-	peb.radius = 10;
-	peb.velocity.x = 100.0;
-	m_pebbles.emplace_back(peb);
-	fprintf(stderr, "pebble spawned pebblie file \n");
+	if (COOLDOWN == 0)
+	{
+		float PI = 3.14159;
+		float MAX = angle + PI / 2;
+		float MIN = angle - PI / 2;
+		float direction = (float(rand()) / (float(RAND_MAX) / (MAX - MIN))) + MIN;
+		float velocity = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (50 - (0))));
+		fprintf(stderr, "\nPebble - update - %f \n ", direction);
+
+		Pebble peb;
+		peb.position.x = position.x;
+		peb.position.y = position.y;
+		peb.radius = 10;
+		peb.velocity.x = motion.speed;
+		peb.velocity.y = motion.speed;
+		peb.angle = direction;
+		m_pebbles.emplace_back(peb);
+		COOLDOWN = 4;
+	}
+	else
+	{
+		COOLDOWN--;
+	}
+	// fprintf(stderr, "pebble spawned pebblie file \n");
 }
 
 void Pebbles::collides_with()
