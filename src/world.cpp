@@ -136,7 +136,7 @@ bool World::init(vec2 screen)
 
 	m_current_speed = 1.f;
 
-	return m_salmon.init() && m_water.init() && m_water.draw_rect_init() && m_box.init() && m_redbox.init() && m_pebbles_emitter.init();
+	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init() && m_water.draw_rect_init() && m_box.init() && m_redbox.init();
 }
 
 // Releases all the associated resources
@@ -260,8 +260,8 @@ bool World::update(float elapsed_ms)
 	// faster based on current.
 	// In a pure ECS engine we would classify entities by their bitmap tags during the update loop
 	// rather than by their class.
-	m_salmon.update(elapsed_ms);
 	m_pebbles_emitter.update(elapsed_ms);
+	m_salmon.update(elapsed_ms);
 	vec2 salmon_pos = m_salmon.get_position();
 	// m_box.update(elapsed_ms);
 	m_box.set_box_position(salmon_pos);
@@ -554,8 +554,8 @@ void World::draw()
 		for (auto &shark : m_sharks)
 			shark.draw(projection_2D);
 	}
-	m_salmon.draw(projection_2D);
 	m_pebbles_emitter.draw(projection_2D);
+	m_salmon.draw(projection_2D);
 	/////////////////////
 	// Truely render to the screen
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
