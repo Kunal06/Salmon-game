@@ -1,5 +1,7 @@
 // Header
 #include "pebbles.hpp"
+#include "turtle.hpp"
+#include "fish.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -79,14 +81,21 @@ void Pebbles::update(float ms)
 		// fprintf(stderr, "\nPebble - update - %f \n ", pebble.angle);
 		// Add Gravity
 		vec2 acceleration = {0.f, 9.81f};
-		float dt = (glfwGetTime() - ms) / 1000;
-		//fprintf(stderr, "\nPebble - update - %f \n ", pebble.position.y);
-		pebble.velocity.y += 10 * acceleration.y * dt;
-		float step_x = 1.0 * pebble.velocity.x * (ms / 1000);
-		float step = 1.0 * 300.f * (ms / 1000);
-		float step_y = 1.0 * pebble.velocity.y * dt;
+		float dt = (ms - glfwGetTime()) / 1000;
+
+		// HORIZONTAL
+		// delta x = v*t
+		float step_x = pebble.velocity.x * dt;
 		pebble.position.x += step_x * cos(pebble.angle);
-		pebble.position.y += step_y;
+		fprintf(stderr, "\nPebble - update - %f \n ", dt);
+
+		// VERTICAL
+		// new velocity in direction y , v = u + at
+		int initial_velocity_y = pebble.velocity.y;
+		pebble.velocity.y += acceleration.y * dt;
+		// delta y = (v+u)/2 *t
+		float step_y = std::fabs((pebble.velocity.y + initial_velocity_y) / 2 * dt);
+		pebble.position.y += step_y * sin(pebble.angle);
 	}
 }
 
@@ -108,9 +117,9 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 		peb.position.x = position.x + 55 * cos(angle);
 		peb.position.y = position.y + 55 * sin(angle);
 		peb.radius = 10;
-		peb.velocity.x = velocity;
-		peb.velocity.y = sin(angle);
-		peb.angle = direction;
+		peb.velocity.x = 500.f;
+		peb.velocity.y = 500.f;
+		peb.angle = std::fabs(direction);
 		m_pebbles.emplace_back(peb);
 		COOLDOWN = 4;
 	}
@@ -129,6 +138,55 @@ void Pebbles::collides_with()
 	// Make sure to handle both collisions between pebbles
 	// and collisions between pebbles and salmon/fish/turtles.
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	int i = 0;
+
+	for (auto &pebble : m_pebbles)
+	{
+		int j = 0;
+		for (auto &pebble1 : m_pebbles)
+		{
+			if (i != j)
+			{
+				float dx = pebble.position.x - pebble1.position.x;
+				float dy = pebble.position.y - pebble1.position.y;
+				float d_sq = dx * dx + dy * dy;
+				float other_r = pebble1.radius;
+				float my_r = pebble.radius;
+				float r = std::max(other_r, my_r);
+				r *= 0.6f;
+				if (d_sq < r * r)
+				{
+					pebble.angle = 3.14 - pebble.angle;
+					//fprintf(stderr, "\nPebble - Collides - %f \n ", pebble.angle);
+				}
+			}
+		}
+	}
+}
+
+void Pebbles::collides_with(const Turtle &turtle)
+{
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// HANDLE PEBBLE COLLISIONS HERE
+	// You will need to write additional functions from scratch.
+	// Make sure to handle both collisions between pebbles
+	// and collisions between pebbles and salmon/fish/turtles.
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	for (auto &pebble : m_pebbles)
+	{
+		float dx = pebble.position.x - turtle.get_position().x;
+		float dy = pebble.position.y - turtle.get_position().y;
+		float d_sq = dx * dx + dy * dy;
+		float other_r = std::max(turtle.get_bounding_box().x, turtle.get_bounding_box().y);
+		float my_r = pebble.radius;
+		float r = std::max(other_r, my_r);
+		r *= 0.6f;
+		if (d_sq < r * r)
+		{
+			pebble.angle = 3.14 - pebble.angle;
+			fprintf(stderr, "\nPebble - Collides - %f \n ", pebble.angle);
+		}
+	}
 }
 
 // Draw pebbles using instancing

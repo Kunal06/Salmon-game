@@ -50,9 +50,19 @@ math.h
 project_path.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/project_path.hpp
 
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/fish.hpp
+common.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
+redBox.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/redBox.hpp
+
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/pebbles.cpp
 pebbles.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/pebbles.hpp
+turtle.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/turtle.hpp
+fish.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/fish.hpp
 cmath
 -
 iostream
@@ -65,6 +75,14 @@ common.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
 
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/project_path.hpp
+
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/redBox.hpp
+common.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
+
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/turtle.hpp
+common.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
 
 /usr/local/include/GLFW/glfw3.h
 stddef.h
