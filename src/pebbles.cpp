@@ -80,22 +80,36 @@ void Pebbles::update(float ms)
 	{
 		// fprintf(stderr, "\nPebble - update - %f \n ", pebble.angle);
 		// Add Gravity
-		vec2 acceleration = {0.f, 9.81f};
-		float dt = (ms - glfwGetTime()) / 1000;
+		// vec2 acceleration = {0.f, 9.81f};
+		// float dt = (ms - glfwGetTime()) / 1000;
 
-		// HORIZONTAL
-		// delta x = v*t
-		float step_x = pebble.velocity.x * dt;
-		pebble.position.x += step_x * cos(pebble.angle);
-		fprintf(stderr, "\nPebble - update - %f \n ", dt);
+		// // HORIZONTAL
+		// // delta x = v*t
+		// float step_x = pebble.velocity.x * dt;
+		// pebble.position.x += step_x * cos(pebble.angle);
+		// fprintf(stderr, "\nPebble - update - %f \n ", dt);
 
-		// VERTICAL
-		// new velocity in direction y , v = u + at
-		int initial_velocity_y = pebble.velocity.y;
-		pebble.velocity.y += acceleration.y * dt;
-		// delta y = (v+u)/2 *t
-		float step_y = std::fabs((pebble.velocity.y + initial_velocity_y) / 2 * dt);
-		pebble.position.y += step_y * sin(pebble.angle);
+		// // VERTICAL
+		// // new velocity in direction y , v = u + at
+		// int initial_velocity_y = pebble.velocity.y;
+		// pebble.velocity.y += acceleration.y * dt;
+		// // delta y = (v+u)/2 *t
+		// float step_y = std::fabs((pebble.velocity.y + initial_velocity_y) / 2 * dt);
+		// pebble.position.y += step_y * sin(pebble.angle);
+		static const float p = 1.293f;
+		static const float A = 0.1f;
+		static const float Cd = 0.47f;
+		static const float m = 1.f;
+		float fd_x = pebble.velocity.x * 0.5f * p * Cd * A * pow(pebble.velocity.x, 2);
+		float fd_y = pebble.velocity.y * 0.5f * p * Cd * A * pow(pebble.velocity.y, 2);
+		float a_x = fd_x;
+		float a_y = fd_y;
+
+		pebble.velocity.x += a_x * (ms / 1000);
+		pebble.velocity.y += a_y * (ms / 1000);
+
+		pebble.position.x += pebble.velocity.x;
+		pebble.position.y += pebble.velocity.y;
 	}
 }
 
@@ -117,8 +131,8 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 		peb.position.x = position.x + 55 * cos(angle);
 		peb.position.y = position.y + 55 * sin(angle);
 		peb.radius = 10;
-		peb.velocity.x = 500.f;
-		peb.velocity.y = 500.f;
+		peb.velocity.x = 100.f * cos(angle);
+		peb.velocity.y = 100.f * sin(angle);
 		peb.angle = std::fabs(direction);
 		m_pebbles.emplace_back(peb);
 		COOLDOWN = 4;
@@ -174,8 +188,9 @@ void Pebbles::collides_with(const Turtle &turtle)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	for (auto &pebble : m_pebbles)
 	{
-		float dx = pebble.position.x - turtle.get_position().x;
-		float dy = pebble.position.y - turtle.get_position().y;
+		vec2 turtle_pos = turtle.get_position();
+		float dx = pebble.position.x - turtle_pos.x;
+		float dy = pebble.position.y - turtle_pos.y;
 		float d_sq = dx * dx + dy * dy;
 		float other_r = std::max(turtle.get_bounding_box().x, turtle.get_bounding_box().y);
 		float my_r = pebble.radius;
@@ -183,8 +198,15 @@ void Pebbles::collides_with(const Turtle &turtle)
 		r *= 0.6f;
 		if (d_sq < r * r)
 		{
-			pebble.angle = 3.14 - pebble.angle;
-			fprintf(stderr, "\nPebble - Collides - %f \n ", pebble.angle);
+			// pebble.angle = 3.14 - pebble.angle;
+			// fprintf(stderr, "\nPebble - Collides - %f \n ", pebble.angle);
+
+			//IMPULSE Resolution
+			// Velocity of pebble relative to turtle
+			vec2 turtle_velocity = {100.f, 0};
+			pebble.velocity = {
+				pebble.velocity.x - ((pebble.velocity.x - turtle_velocity.x) * (pebble.position.x - turtle_pos.x) / std::fabs(pow((pebble.position.x - static_cast<float>(turtle_pos.x)), 2.f))),
+				pebble.velocity.y - ((pebble.velocity.y - turtle_velocity.y) * (pebble.position.y - turtle_pos.y) / std::fabs(pow((pebble.position.y - static_cast<float>(turtle_pos.y)), 2.f)))};
 		}
 	}
 }
