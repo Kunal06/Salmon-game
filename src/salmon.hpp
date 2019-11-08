@@ -43,6 +43,7 @@ public:
 
 	// Set salmon rotation in radians
 	void set_rotation(float radians);
+	float get_rotation();
 
 	// Set salmon rotation in radians
 	void rotate(float off);
@@ -71,12 +72,12 @@ public:
 private:
 	float m_light_up_countdown_ms; // Used to keep track for how long the salmon should be lit up
 	bool m_is_alive;
-	
+
 	bool is_up = false;
 	bool is_down = false;
 	bool is_left = false;
 	bool is_right = false;
 	bool debug_mode = false;
 	bool collided = false;
-	float rotate_speed = 0.08;			   // True if the salmon is alive
+	float rotate_speed = 0.08; // True if the salmon is alive
 };

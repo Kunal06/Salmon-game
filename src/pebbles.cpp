@@ -74,13 +74,18 @@ void Pebbles::update(float ms)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	for (auto &pebble : m_pebbles)
 	{
-		fprintf(stderr, "\nPebble - update - %f \n ", pebble.velocity.x);
-		float step = 1.0 * pebble.velocity.x * (ms / 1000);
-		pebble.position.x += step;
+		//fprintf(stderr, "\nPebble - update - %f \n ", pebble.velocity.x);
+		//MOving in angle direction
+		float step_x = 1.0 * pebble.velocity.x * (ms / 1000);
+		float step_y = 1.0 * pebble.velocity.y * (ms / 1000);
+		pebble.position.x += step_x;
+		pebble.position.y += step_y;
+
+		// REFLECT
 	}
 }
 
-void Pebbles::spawn_pebble(vec2 position)
+void Pebbles::spawn_pebble(vec2 position, float angle)
 {
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE PEBBLE SPAWNING HERE
@@ -89,9 +94,10 @@ void Pebbles::spawn_pebble(vec2 position)
 	peb.position.x = position.x;
 	peb.position.y = position.y;
 	peb.radius = 10;
-	peb.velocity.x = 100.0;
+	peb.velocity.x = 300.0 * cos(angle);
+	peb.velocity.y = 300.0 * sin(angle);
 	m_pebbles.emplace_back(peb);
-	fprintf(stderr, "pebble spawned pebblie file \n");
+	//fprintf(stderr, "pebble spawned pebblie file \n");
 }
 
 void Pebbles::collides_with()
