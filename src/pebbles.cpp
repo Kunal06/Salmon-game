@@ -82,7 +82,7 @@ void Pebbles::update(float ms)
 		// Add Gravity
 		float PI = 3.14159;
 
-		vec2 a = {0.f, 5.81f};
+		vec2 a = {0.f, 9.81f};
 		float dt = (ms) / 1000;
 
 		// HORIZONTAL
@@ -145,14 +145,18 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 		Pebble peb;
 		peb.position.x = position.x + 55 * cos(angle);
 		peb.position.y = position.y + 55 * sin(angle);
-		angle = fmod (angle,2*PI);
+		angle = fmod (angle,PI);
 		float MAX = angle + PI / 2;
 		float MIN = angle - PI / 2;
+		if(angle >= -PI/2 && angle < PI/2){
+			MIN =0.5;
+		}
 		float direction = (float(rand()) / (float(RAND_MAX) / (MAX - MIN))) + MIN;
 		peb.radius = 10;
-		peb.velocity.x = 500.f;
+		peb.velocity.x = velocity;
 		peb.velocity.y = 200.f;
-		peb.angle = angle;
+		peb.angle = direction;
+		peb.mass = 1.f;
 		// if((angle < PI && angle > PI/2) || (angle > 1.57 && angle < 3.14))
 		// else
 		// 	peb.angle = angle;
@@ -184,20 +188,33 @@ void Pebbles::collides_with()
 		{
 			if (i != j)
 			{
-				float dx = pebble.position.x - pebble1.position.x;
-				float dy = pebble.position.y - pebble1.position.y;
-				float d_sq = dx * dx + dy * dy;
-				float other_r = pebble1.radius;
-				float my_r = pebble.radius;
-				float r = std::max(other_r, my_r);
-				r *= 0.6f;
-				if (d_sq < r * r)
+				vec2 p_v = pebble.velocity;
+				vec2 p_pos = pebble.position;
+				vec2 p1_v = pebble1.velocity;
+				vec2 p1_pos = pebble1.position;
+				//  figure out the distance between the two circles' centers. Pythagoras
+				float a = p_pos.x - p1_pos.x;
+				float b = p_pos.y - p1_pos.y;
+				float c = sqrt(a * a + b * b);
+				if (c < (pebble.radius + pebble1.radius + pebble1.radius))
 				{
-					pebble.angle = 3.14 - pebble.angle;
-					//fprintf(stderr, "\nPebble - Collides - %f \n ", pebble.angle);
+					//fprintf(stderr, "\nPebble - Collides - %d - with - %d \n ", i, j);
+					//accurate collision points
+					float collisionPointX =
+						((p_pos.x * pebble1.radius) + (p1_pos.x * pebble.radius)) / (pebble.radius + pebble1.radius);
+					float collisionPointY =
+						((p_pos.y * pebble1.radius) + (p1_pos.y * pebble.radius)) / (pebble.radius + pebble1.radius);
+					//fprintf(stderr, "\n before Pebble - Collides - %f - with - %f \n ", pebble.velocity.x, pebble.velocity.y);
+					pebble.velocity.x = (pebble.velocity.x * (pebble.mass - pebble1.mass) + (2 * pebble1.mass * pebble1.velocity.x)) / (pebble.mass + pebble1.mass);
+					pebble.velocity.y = (pebble.velocity.y * (pebble.mass - pebble1.mass) + (2 * pebble1.mass * pebble1.velocity.y)) / (pebble.mass + pebble1.mass);
+					pebble1.velocity.x = (pebble1.velocity.x * (pebble1.mass - pebble.mass) + (2 * pebble.mass * pebble.velocity.x)) / (pebble.mass + pebble1.mass);
+					pebble1.velocity.y = (pebble1.velocity.y * (pebble1.mass - pebble.mass) + (2 * pebble.mass * pebble.velocity.y)) / (pebble.mass + pebble1.mass);
+					//fprintf(stderr, "\nAfter Pebble - Collides - %f - with - %f \n ", pebble.velocity.x, pebble.velocity.y);
 				}
 			}
+			j++;
 		}
+		i++;
 	}
 }
 

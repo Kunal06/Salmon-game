@@ -25,6 +25,7 @@ public:
 		vec2 velocity;
 		float radius;
 		float angle;
+		float mass;
 	};
 
 	// Creates all the associated render resources
