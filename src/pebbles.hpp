@@ -46,8 +46,9 @@ public:
 	void spawn_pebble(vec2 position, float angle);
 
 	// Trigger collision checks
-	void collides_with();
+	void collides_with(float ms);
 	void collides_with(const Turtle &turtle);
+	void collides_with(const Fish &fish);
 
 private:
 	GLuint m_instance_vbo;		   // vbo for instancing pebbles
