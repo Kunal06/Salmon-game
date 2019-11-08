@@ -133,6 +133,7 @@ void Salmon::update(float ms)
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if (is_up)
 		{
+			
 			angled_move(1.0);
 			//box.angled_move(1.0);
 		}

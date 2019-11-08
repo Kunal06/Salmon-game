@@ -80,22 +80,43 @@ void Pebbles::update(float ms)
 	{
 		// fprintf(stderr, "\nPebble - update - %f \n ", pebble.angle);
 		// Add Gravity
-		vec2 acceleration = {0.f, 9.81f};
-		float dt = (ms - glfwGetTime()) / 1000;
+		vec2 a = {0.f, 5.81f};
+		float dt = (ms) / 1000;
 
 		// HORIZONTAL
-		// delta x = v*t
+		// v = u + at, a=0
+		// pebble.velocity.x = pebble.velocity.x + acceleration.x * dt;
+		// // delta x = v*t
+		// float step_x = pebble.velocity.x * dt;
+		// pebble.position.x += step_x * cos(pebble.angle) ;
+
+		// HORIZONTAL
 		float step_x = pebble.velocity.x * dt;
-		pebble.position.x += step_x * cos(pebble.angle);
-		fprintf(stderr, "\nPebble - update - %f \n ", dt);
+		pebble.velocity.x -= step_x;
+		pebble.position.x += step_x;
 
 		// VERTICAL
+		float delta_y = 800 - pebble.position.y ;
+		float a_y = a.y;
+		float Vy_i = pebble.velocity.y;
+			// y = ut + 1/2 a t^2 , t= dt
+		float step_y = Vy_i *dt + 1/2 * a.y * pow(dt,2);
+		pebble.velocity.y += step_y;
+		pebble.position.y += step_y;
+
+
+
+
+
+
+
 		// new velocity in direction y , v = u + at
-		int initial_velocity_y = pebble.velocity.y;
-		pebble.velocity.y += acceleration.y * dt;
-		// delta y = (v+u)/2 *t
-		float step_y = std::fabs((pebble.velocity.y + initial_velocity_y) / 2 * dt);
-		pebble.position.y += step_y * sin(pebble.angle);
+		// int initial_velocity_y = pebble.velocity.y;
+		// pebble.velocity.y += acceleration.y * dt;
+		// // delta y = (v+u)/2 *t
+		// float step_y =  pebble.velocity.y * dt;
+		// fprintf(stderr, "\nPebble - update - %f \n ", pebble.position.y);
+		// pebble.position.y += step_y * sin(0);
 	}
 }
 
@@ -107,19 +128,20 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 	if (COOLDOWN == 0)
 	{
 		float PI = 3.14159;
-		float MAX = angle + PI / 2;
-		float MIN = angle - PI / 2;
-		float direction = (float(rand()) / (float(RAND_MAX) / (MAX - MIN))) + MIN;
 		float velocity = (float(rand()) / (float(RAND_MAX) / (800.f - 500.f))) + 100.f;
-		//fprintf(stderr, "\nPebble - update - %f \n ", velocity);
+		// fprintf(stderr, "\nPebble - update - %f \n ", angle);
 
 		Pebble peb;
 		peb.position.x = position.x + 55 * cos(angle);
 		peb.position.y = position.y + 55 * sin(angle);
+		angle = fmod (angle,PI/2);
+		float MAX = angle + PI / 2;
+		float MIN = angle - PI / 2;
+		float direction = (float(rand()) / (float(RAND_MAX) / (MAX - MIN))) + MIN;
 		peb.radius = 10;
 		peb.velocity.x = 500.f;
-		peb.velocity.y = 500.f;
-		peb.angle = std::fabs(direction);
+		peb.velocity.y = 200.f;
+		peb.angle = 0;
 		m_pebbles.emplace_back(peb);
 		COOLDOWN = 4;
 	}
