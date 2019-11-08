@@ -80,6 +80,8 @@ void Pebbles::update(float ms)
 	{
 		// fprintf(stderr, "\nPebble - update - %f \n ", pebble.angle);
 		// Add Gravity
+		float PI = 3.14159;
+
 		vec2 a = {0.f, 5.81f};
 		float dt = (ms) / 1000;
 
@@ -98,14 +100,20 @@ void Pebbles::update(float ms)
 		// VERTICAL
 		float delta_y = 800 - pebble.position.y ;
 		float a_y = a.y;
-
-		float Vy_i = pebble.velocity.y;
+		float Vy_i = pebble.velocity.y * sin(pebble.angle);
+		if (pebble.angle == 0 )
+			Vy_i = pebble.velocity.y * sin(0.5 + pebble.angle);
+		
 			// y = ut + 1/2 a t^2 , t= dt
 		float step_y = Vy_i *dt + 1/2 * a.y;
-		
-		pebble.velocity.y += step_y;
+		float off = 1.0;
+		fprintf(stderr, "\nPebble - update - %f \n ", pebble.angle);
+
+		if (pebble.angle >= PI)
+			off = -1.0;
+		pebble.velocity.y += off * step_y;
 		//fprintf(stderr, "\nPebble - update Velocity - %f \n ", pebble.velocity.y);
-		pebble.position.y += step_y;
+		pebble.position.y += off * step_y ;
 
 
 
@@ -144,12 +152,10 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 		peb.radius = 10;
 		peb.velocity.x = 500.f;
 		peb.velocity.y = 200.f;
-		peb.angle = - angle;
+		peb.angle = angle;
 		// if((angle < PI && angle > PI/2) || (angle > 1.57 && angle < 3.14))
-			peb.angle = 2* PI - angle;
 		// else
 		// 	peb.angle = angle;
-		fprintf(stderr, "\nPebble - update - %f \n ", angle);
 
 		m_pebbles.emplace_back(peb);
 		COOLDOWN = 4;
