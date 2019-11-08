@@ -10,6 +10,7 @@
 
 static const int MAX_PEBBLES = 25;
 constexpr int NUM_SEGMENTS = 12;
+float PI = 3.14159;
 
 bool Pebbles::init()
 {
@@ -78,12 +79,13 @@ void Pebbles::update(float ms)
 		//acceleration
 		vec2 a = {0, 9.81};
 		float dt = ms / 1000;
+		// v = u + at
 		// horizontal velocity
 		pebble.velocity.x = (pebble.velocity.x + a.x);
 		//vertical velocity
 		pebble.velocity.y = pebble.velocity.y + a.y;
-		float step_x = 1.0 * pebble.velocity.x * (ms / 1000);
-		float step_y = 1.0 * pebble.velocity.y * (ms / 1000);
+		float step_x = 1.0 * pebble.velocity.x * dt;
+		float step_y = 1.0 * pebble.velocity.y * dt;
 		pebble.position.x += step_x;
 		pebble.position.y += step_y;
 
@@ -96,12 +98,21 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE PEBBLE SPAWNING HERE
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//Randomize variables
+	float velocity_x = (float(rand()) / (float(RAND_MAX) / (800.f - 500.f))) + 500.f;
+	float velocity_y = (float(rand()) / (float(RAND_MAX) / (800.f - 500.f))) + 500.f;
+	float MAX = angle + PI / 4;
+	float MIN = angle - PI / 4;
+	angle = (float(rand()) / (float(RAND_MAX) / (MAX - MIN))) + MIN;
+	//fprintf(stderr, "\nPebble - update - %f \n ", angle);
+	//Randomize variables -----
+
 	Pebble peb;
 	peb.position.x = position.x;
 	peb.position.y = position.y;
 	peb.radius = 10;
-	peb.velocity.x = 500.0 * cos(angle);
-	peb.velocity.y = 300.0 * sin(angle);
+	peb.velocity.x = velocity_x * cos(angle);
+	peb.velocity.y = velocity_y * sin(angle);
 	m_pebbles.emplace_back(peb);
 	//fprintf(stderr, "pebble spawned pebblie file \n");
 }
