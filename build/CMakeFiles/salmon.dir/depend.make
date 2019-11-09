@@ -91,9 +91,12 @@ CMakeFiles/salmon.dir/src/main.cpp.o: /usr/local/include/SDL2/close_code.h
 CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../ext/gl3w/gl3w.h
 CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../ext/gl3w/glcorearb.h
 CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../src/common.hpp
+CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../src/fish.hpp
 CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../src/pebbles.cpp
 CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../src/pebbles.hpp
 CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../src/project_path.hpp
+CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../src/redBox.hpp
+CMakeFiles/salmon.dir/src/pebbles.cpp.o: ../src/turtle.hpp
 CMakeFiles/salmon.dir/src/pebbles.cpp.o: /usr/local/include/GLFW/glfw3.h
 
 CMakeFiles/salmon.dir/src/redBox.cpp.o: ../ext/gl3w/gl3w.h

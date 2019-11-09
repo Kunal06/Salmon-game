@@ -92,9 +92,12 @@ CMakeFiles/salmon.dir/src/pebbles.cpp.o
  ../ext/gl3w/gl3w.h
  ../ext/gl3w/glcorearb.h
  /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
+ /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/fish.hpp
  /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/pebbles.cpp
  /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/pebbles.hpp
  /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/project_path.hpp
+ /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/redBox.hpp
+ /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/turtle.hpp
  /usr/local/include/GLFW/glfw3.h
 CMakeFiles/salmon.dir/src/redBox.cpp.o
  ../ext/gl3w/gl3w.h

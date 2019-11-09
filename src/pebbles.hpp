@@ -4,6 +4,9 @@
 
 #include "common.hpp"
 
+class Turtle;
+class Fish;
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // DON'T WORRY ABOUT THIS CLASS UNTIL ASSIGNMENT 3
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -44,6 +47,8 @@ public:
 
 	// Trigger collision checks
 	void collides_with(float ms);
+	void collides_with(const Turtle &turtle, float ms);
+	void collides_with(const Fish &fish, float ms);
 
 private:
 	GLuint m_instance_vbo;		   // vbo for instancing pebbles

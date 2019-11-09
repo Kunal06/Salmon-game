@@ -38,10 +38,6 @@ stdint.h
 inttypes.h
 -
 
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/box.hpp
-common.hpp
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
-
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
 fstream
 -
@@ -60,37 +56,27 @@ common.hpp
 redBox.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/redBox.hpp
 
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/project_path.hpp
-
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/redBox.hpp
-common.hpp
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
-
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/salmon.cpp
-salmon.hpp
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/salmon.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/pebbles.cpp
+pebbles.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/pebbles.hpp
 turtle.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/turtle.hpp
 fish.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/fish.hpp
-shark.hpp
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/shark.hpp
-box.hpp
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/box.hpp
-vector
--
-string
--
-algorithm
--
 cmath
 -
+iostream
+-
 
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/salmon.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/pebbles.hpp
+vector
+-
 common.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
 
-/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/shark.hpp
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/project_path.hpp
+
+/Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/redBox.hpp
 common.hpp
 /Users/User/Documents/UBC/CPSC 427/Assignments/Salmon-game/src/common.hpp
 

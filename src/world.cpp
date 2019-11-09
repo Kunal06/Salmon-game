@@ -197,6 +197,7 @@ bool World::update(float elapsed_ms)
 			m_box.kill();
 			break;
 		}
+		m_pebbles_emitter.collides_with(turtle, elapsed_ms);
 	}
 
 	// Checking Salmon - Fish collisions

@@ -1,5 +1,7 @@
 // Header
 #include "pebbles.hpp"
+#include "turtle.hpp"
+#include "fish.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -98,6 +100,20 @@ void Pebbles::update(float ms)
 
 		// REFLECT
 	}
+
+	// Removing out off screen pebbles
+	auto pebble_it = m_pebbles.begin();
+	while (pebble_it != m_pebbles.end())
+	{
+		float w = pebble_it->position.x / 2;
+		if (pebble_it->position.x + w < 0.f)
+		{
+			pebble_it = m_pebbles.erase(pebble_it);
+			continue;
+		}
+
+		++pebble_it;
+	}
 }
 
 void Pebbles::spawn_pebble(vec2 position, float angle)
@@ -115,11 +131,12 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 	//Randomize variables -----
 
 	Pebble peb;
-	peb.position.x = position.x;
-	peb.position.y = position.y;
-	peb.radius = 10;
-	peb.velocity.x = velocity_x * cos(angle);
-	peb.velocity.y = velocity_y * sin(angle);
+	peb.angle = angle;
+	peb.position.x = position.x + 55 * cos(angle);
+	peb.position.y = position.y + 55 * sin(angle);
+	peb.radius = (float(rand()) / (float(RAND_MAX) / (20 - 10))) + 10;
+	peb.velocity.x = velocity_x * cos(peb.angle);
+	peb.velocity.y = velocity_y * sin(peb.angle);
 	peb.mass = 1.f;
 	m_pebbles.emplace_back(peb);
 
@@ -177,11 +194,11 @@ void Pebbles::collides_with(float ms)
 						((p_pos.x * pebble1.radius) + (p1_pos.x * pebble.radius)) / (pebble.radius + pebble1.radius);
 					float collisionPointY =
 						((p_pos.y * pebble1.radius) + (p1_pos.y * pebble.radius)) / (pebble.radius + pebble1.radius);
-					float pebble_velocity_x = (2 * pebble1.mass * pebble1.velocity.x) / (pebble.mass + pebble1.mass);
-					float pebble_velocity_y = (2 * pebble1.mass * pebble1.velocity.y) / (pebble.mass + pebble1.mass);
-					float pebble1_velocity_x = (2 * pebble.mass * pebble.velocity.x) / (pebble.mass + pebble1.mass);
-					float pebble1_velocity_y = (2 * pebble.mass * pebble.velocity.y) / (pebble.mass + pebble1.mass);
-					fprintf(stderr, "\nAfter Pebble - Collides - %f - with - %f \n ", pebble_velocity_x, pebble1_velocity_x);
+					float pebble_velocity_x = (pebble.velocity.x * (pebble.mass - pebble1.mass) + (2 * pebble1.mass * pebble1.velocity.x)) / (pebble.mass + pebble1.mass);
+					float pebble_velocity_y = (pebble.velocity.y * (pebble.mass - pebble1.mass) + (2 * pebble1.mass * pebble1.velocity.y)) / (pebble.mass + pebble1.mass);
+					float pebble1_velocity_x = (pebble1.velocity.x * (pebble1.mass - pebble.mass) + (2 * pebble.mass * pebble.velocity.x)) / (pebble.mass + pebble1.mass);
+					float pebble1_velocity_y = (pebble1.velocity.y * (pebble1.mass - pebble.mass) + (2 * pebble.mass * pebble.velocity.y)) / (pebble.mass + pebble1.mass);
+					//fprintf(stderr, "\nAfter Pebble - Collides - %f - with - %f \n ", pebble_velocity_x, pebble1_velocity_x);
 					float bounce = 1.0;
 					pebble.velocity.x = bounce * pebble_velocity_x;
 					pebble.velocity.y = bounce * pebble_velocity_y;
@@ -199,6 +216,62 @@ void Pebbles::collides_with(float ms)
 	}
 }
 
+void Pebbles::collides_with(const Turtle &turtle, float ms)
+{
+	for (auto &pebble : m_pebbles)
+	{
+		vec2 pos = pebble.position;
+		vec2 turtle_pos = turtle.get_position();
+		int offset_verticle = 50;
+		int offset_horizontal = 50;
+		// pebble hitting turtle from under
+		if (pos.y < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y + offset_verticle - 20 && pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x + offset_horizontal)
+		{
+			// fprintf(stdout, "collision with turtle from under\n");
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+		// Pebble from top
+		else if (pos.y > turtle_pos.y - offset_verticle && pos.y < turtle_pos.y - offset_verticle + 20 && pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x + offset_horizontal)
+		{
+			// fprintf(stdout, "collision with turtle from top\n");
+			// pebble.angle = -pebble.angle;
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+		// Pebble from left
+		else if (pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x - offset_horizontal + 20 && pos.y < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y - offset_verticle)
+		{
+			// fprintf(stdout, "collision with turtle from left\n");
+			// if (pebble.angle > 0)
+			// 	pebble.angle = PI - pebble.angle;
+			// else
+			// 	pebble.angle = -PI - pebble.angle;
+			pebble.velocity.x = -pebble.velocity.x;
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+		// Pebble from right
+		else if (pos.x < turtle_pos.x + offset_horizontal && pos.x > turtle_pos.x && pos.y + offset_horizontal - 20 < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y - offset_verticle)
+		{
+			// fprintf(stdout, "collision with turtle from right\n");
+			// if (pebble.angle > 0)
+			// 	pebble.angle = PI - pebble.angle;
+			// else
+			// 	pebble.angle = -PI - pebble.angle;
+			pebble.velocity.x = -pebble.velocity.x;
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+	}
+}
+void Pebbles::collides_with(const Fish &fish, float ms)
+{
+}
 // Draw pebbles using instancing
 void Pebbles::draw(const mat3 &projection)
 {
