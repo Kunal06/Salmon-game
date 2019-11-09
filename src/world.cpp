@@ -184,7 +184,7 @@ bool World::update(float elapsed_ms)
 	vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
 
 	// Checking Salmon - Turtle collisions
-	for (const auto &turtle : m_turtles)
+	for (auto &turtle : m_turtles)
 	{
 		if (m_salmon.collides_with(turtle))
 		{

@@ -47,7 +47,7 @@ public:
 
 	// Trigger collision checks
 	void collides_with(float ms);
-	void collides_with(const Turtle &turtle, float ms);
+	void collides_with(Turtle &turtle, float ms);
 	void collides_with(const Fish &fish, float ms);
 	void collides_with_salmon(vec2 salmon_pos, float ms);
 

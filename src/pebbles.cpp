@@ -216,7 +216,7 @@ void Pebbles::collides_with(float ms)
 	}
 }
 
-void Pebbles::collides_with(const Turtle &turtle, float ms)
+void Pebbles::collides_with(Turtle &turtle, float ms)
 {
 	for (auto &pebble : m_pebbles)
 	{
@@ -232,6 +232,8 @@ void Pebbles::collides_with(const Turtle &turtle, float ms)
 			pebble.velocity.y = -pebble.velocity.y;
 			pebble.position.x += pebble.velocity.x * ms / 1000;
 			pebble.position.y += pebble.velocity.y * ms / 1000;
+			turtle_pos.y -= 5;
+			turtle.set_position(turtle_pos);
 		}
 		// Pebble from top
 		else if (pos.y > turtle_pos.y - offset_verticle && pos.y < turtle_pos.y - offset_verticle + off && pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x + offset_horizontal)
@@ -241,6 +243,8 @@ void Pebbles::collides_with(const Turtle &turtle, float ms)
 			pebble.velocity.y = -pebble.velocity.y;
 			pebble.position.x += pebble.velocity.x * ms / 1000;
 			pebble.position.y += pebble.velocity.y * ms / 1000;
+			turtle_pos.y += 5;
+			turtle.set_position(turtle_pos);
 		}
 		// Pebble from left
 		else if (pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x - offset_horizontal + off && pos.y < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y - offset_verticle)
@@ -254,6 +258,8 @@ void Pebbles::collides_with(const Turtle &turtle, float ms)
 			pebble.velocity.y = -pebble.velocity.y;
 			pebble.position.x += pebble.velocity.x * ms / 1000;
 			pebble.position.y += pebble.velocity.y * ms / 1000;
+			turtle_pos.x += 5;
+			turtle.set_position(turtle_pos);
 		}
 		// Pebble from right
 		else if (pos.x < turtle_pos.x + offset_horizontal && pos.x > turtle_pos.x && pos.y + offset_horizontal - off < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y - offset_verticle)
@@ -267,6 +273,8 @@ void Pebbles::collides_with(const Turtle &turtle, float ms)
 			pebble.velocity.y = -pebble.velocity.y;
 			pebble.position.x += pebble.velocity.x * ms / 1000;
 			pebble.position.y += pebble.velocity.y * ms / 1000;
+			turtle_pos.x -= 5;
+			turtle.set_position(turtle_pos);
 		}
 	}
 }
