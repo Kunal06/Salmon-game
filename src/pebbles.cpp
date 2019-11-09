@@ -324,6 +324,61 @@ void Pebbles::collides_with(const Fish &fish, float ms)
 		}
 	}
 }
+
+void Pebbles::collides_with_salmon(vec2 salmon_pos, float ms)
+{
+	for (auto &pebble : m_pebbles)
+	{
+		vec2 pos = pebble.position;
+		//vec2 fish_pos = fish.get_position();
+		int offset_verticle = 50;
+		int offset_horizontal = 40;
+		int off = 15;
+		// pebble hitting fish from under
+		if (pos.y < salmon_pos.y + offset_verticle && pos.y > salmon_pos.y + offset_verticle - off && pos.x > salmon_pos.x - offset_horizontal && pos.x < salmon_pos.x + offset_horizontal)
+		{
+			// fprintf(stdout, "collision with fish from under\n");
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+		// Pebble from top
+		else if (pos.y > salmon_pos.y - offset_verticle && pos.y < salmon_pos.y - offset_verticle + off && pos.x > salmon_pos.x - offset_horizontal && pos.x < salmon_pos.x + offset_horizontal)
+		{
+			// fprintf(stdout, "collision with fish from top\n");
+			// pebble.angle = -pebble.angle;
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+		// Pebble from left
+		else if (pos.x > salmon_pos.x - offset_horizontal && pos.x < salmon_pos.x - offset_horizontal + off && pos.y < salmon_pos.y + offset_verticle && pos.y > salmon_pos.y - offset_verticle)
+		{
+			// fprintf(stdout, "collision with fish from left\n");
+			// if (pebble.angle > 0)
+			// 	pebble.angle = PI - pebble.angle;
+			// else
+			// 	pebble.angle = -PI - pebble.angle;
+			pebble.velocity.x = -pebble.velocity.x;
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+		// Pebble from right
+		else if (pos.x < salmon_pos.x + offset_horizontal && pos.x > salmon_pos.x && pos.y + offset_horizontal - off < salmon_pos.y + offset_verticle && pos.y > salmon_pos.y - offset_verticle)
+		{
+			// fprintf(stdout, "collision with fish from right\n");
+			// if (pebble.angle > 0)
+			// 	pebble.angle = PI - pebble.angle;
+			// else
+			// 	pebble.angle = -PI - pebble.angle;
+			pebble.velocity.x = -pebble.velocity.x;
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+	}
+}
 // Draw pebbles using instancing
 void Pebbles::draw(const mat3 &projection)
 {

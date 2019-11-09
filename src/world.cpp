@@ -199,7 +199,7 @@ bool World::update(float elapsed_ms)
 		}
 		m_pebbles_emitter.collides_with(turtle, elapsed_ms);
 	}
-
+	m_pebbles_emitter.collides_with_salmon(m_salmon.get_position(), elapsed_ms);
 	// Checking Salmon - Fish collisions
 	auto fish_it = m_fish.begin();
 	while (fish_it != m_fish.end())
