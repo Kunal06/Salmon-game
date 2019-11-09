@@ -224,8 +224,9 @@ void Pebbles::collides_with(const Turtle &turtle, float ms)
 		vec2 turtle_pos = turtle.get_position();
 		int offset_verticle = 50;
 		int offset_horizontal = 50;
+		int off = 15;
 		// pebble hitting turtle from under
-		if (pos.y < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y + offset_verticle - 20 && pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x + offset_horizontal)
+		if (pos.y < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y + offset_verticle - off && pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x + offset_horizontal)
 		{
 			// fprintf(stdout, "collision with turtle from under\n");
 			pebble.velocity.y = -pebble.velocity.y;
@@ -233,7 +234,7 @@ void Pebbles::collides_with(const Turtle &turtle, float ms)
 			pebble.position.y += pebble.velocity.y * ms / 1000;
 		}
 		// Pebble from top
-		else if (pos.y > turtle_pos.y - offset_verticle && pos.y < turtle_pos.y - offset_verticle + 20 && pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x + offset_horizontal)
+		else if (pos.y > turtle_pos.y - offset_verticle && pos.y < turtle_pos.y - offset_verticle + off && pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x + offset_horizontal)
 		{
 			// fprintf(stdout, "collision with turtle from top\n");
 			// pebble.angle = -pebble.angle;
@@ -242,7 +243,7 @@ void Pebbles::collides_with(const Turtle &turtle, float ms)
 			pebble.position.y += pebble.velocity.y * ms / 1000;
 		}
 		// Pebble from left
-		else if (pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x - offset_horizontal + 20 && pos.y < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y - offset_verticle)
+		else if (pos.x > turtle_pos.x - offset_horizontal && pos.x < turtle_pos.x - offset_horizontal + off && pos.y < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y - offset_verticle)
 		{
 			// fprintf(stdout, "collision with turtle from left\n");
 			// if (pebble.angle > 0)
@@ -255,7 +256,7 @@ void Pebbles::collides_with(const Turtle &turtle, float ms)
 			pebble.position.y += pebble.velocity.y * ms / 1000;
 		}
 		// Pebble from right
-		else if (pos.x < turtle_pos.x + offset_horizontal && pos.x > turtle_pos.x && pos.y + offset_horizontal - 20 < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y - offset_verticle)
+		else if (pos.x < turtle_pos.x + offset_horizontal && pos.x > turtle_pos.x && pos.y + offset_horizontal - off < turtle_pos.y + offset_verticle && pos.y > turtle_pos.y - offset_verticle)
 		{
 			// fprintf(stdout, "collision with turtle from right\n");
 			// if (pebble.angle > 0)
@@ -271,6 +272,57 @@ void Pebbles::collides_with(const Turtle &turtle, float ms)
 }
 void Pebbles::collides_with(const Fish &fish, float ms)
 {
+	for (auto &pebble : m_pebbles)
+	{
+		vec2 pos = pebble.position;
+		vec2 fish_pos = fish.get_position();
+		int offset_verticle = 50;
+		int offset_horizontal = 40;
+		int off = 15;
+		// pebble hitting fish from under
+		if (pos.y < fish_pos.y + offset_verticle && pos.y > fish_pos.y + offset_verticle - off && pos.x > fish_pos.x - offset_horizontal && pos.x < fish_pos.x + offset_horizontal)
+		{
+			// fprintf(stdout, "collision with fish from under\n");
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+		// Pebble from top
+		else if (pos.y > fish_pos.y - offset_verticle && pos.y < fish_pos.y - offset_verticle + off && pos.x > fish_pos.x - offset_horizontal && pos.x < fish_pos.x + offset_horizontal)
+		{
+			// fprintf(stdout, "collision with fish from top\n");
+			// pebble.angle = -pebble.angle;
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+		// Pebble from left
+		else if (pos.x > fish_pos.x - offset_horizontal && pos.x < fish_pos.x - offset_horizontal + off && pos.y < fish_pos.y + offset_verticle && pos.y > fish_pos.y - offset_verticle)
+		{
+			// fprintf(stdout, "collision with fish from left\n");
+			// if (pebble.angle > 0)
+			// 	pebble.angle = PI - pebble.angle;
+			// else
+			// 	pebble.angle = -PI - pebble.angle;
+			pebble.velocity.x = -pebble.velocity.x;
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+		// Pebble from right
+		else if (pos.x < fish_pos.x + offset_horizontal && pos.x > fish_pos.x && pos.y + offset_horizontal - off < fish_pos.y + offset_verticle && pos.y > fish_pos.y - offset_verticle)
+		{
+			// fprintf(stdout, "collision with fish from right\n");
+			// if (pebble.angle > 0)
+			// 	pebble.angle = PI - pebble.angle;
+			// else
+			// 	pebble.angle = -PI - pebble.angle;
+			pebble.velocity.x = -pebble.velocity.x;
+			pebble.velocity.y = -pebble.velocity.y;
+			pebble.position.x += pebble.velocity.x * ms / 1000;
+			pebble.position.y += pebble.velocity.y * ms / 1000;
+		}
+	}
 }
 // Draw pebbles using instancing
 void Pebbles::draw(const mat3 &projection)

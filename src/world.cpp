@@ -213,6 +213,7 @@ bool World::update(float elapsed_ms)
 		}
 		else
 			++fish_it;
+		m_pebbles_emitter.collides_with(*fish_it, elapsed_ms);
 	}
 	if (advanced)
 	{
