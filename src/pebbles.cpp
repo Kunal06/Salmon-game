@@ -73,14 +73,21 @@ void Pebbles::update(float ms)
 	// You will need to handle both the motion of pebbles
 	// and the removal of dead pebbles.
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	collides_with(ms / 1000);
+
 	for (auto &pebble : m_pebbles)
 	{
 		//fprintf(stderr, "\nPebble - update - %f \n ", pebble.velocity.x);
 		//acceleration
 		vec2 a = {0, 9.81};
+		//collision test
+		//vec2 a = {0, 0};
+
 		float dt = ms / 1000;
 		// v = u + at
 		// horizontal velocity
+		// fprintf(stderr, "\n after Pebble - Collides - %f - with - %f \n ", pebble.velocity.x, pebble.velocity.y);
 		pebble.velocity.x = (pebble.velocity.x + a.x);
 		//vertical velocity
 		pebble.velocity.y = pebble.velocity.y + a.y;
@@ -113,11 +120,32 @@ void Pebbles::spawn_pebble(vec2 position, float angle)
 	peb.radius = 10;
 	peb.velocity.x = velocity_x * cos(angle);
 	peb.velocity.y = velocity_y * sin(angle);
+	peb.mass = 1.f;
 	m_pebbles.emplace_back(peb);
+
+	// Collision testing
+	// Pebble peb;
+	// peb.position.x = position.x;
+	// peb.position.y = position.y;
+	// peb.radius = 10;
+	// peb.velocity.x = 500.f * cos(angle);
+	// peb.velocity.y = 0 * sin(angle);
+	// peb.mass = 1.f;
+	// m_pebbles.emplace_back(peb);
+
+	// Pebble peb1;
+	// peb1.position.x = 1200 - position.x;
+	// peb1.position.y = position.y;
+	// peb1.radius = 10;
+	// peb1.velocity.x = -400.f * cos(angle);
+	// peb1.velocity.y = 0 * sin(angle);
+	// peb1.mass = 1.f;
+	// m_pebbles.emplace_back(peb1);
+
 	//fprintf(stderr, "pebble spawned pebblie file \n");
 }
 
-void Pebbles::collides_with()
+void Pebbles::collides_with(float ms)
 {
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE PEBBLE COLLISIONS HERE
@@ -125,6 +153,50 @@ void Pebbles::collides_with()
 	// Make sure to handle both collisions between pebbles
 	// and collisions between pebbles and salmon/fish/turtles.
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	int i = 0;
+
+	for (auto &pebble : m_pebbles)
+	{
+		int j = 0;
+		for (auto &pebble1 : m_pebbles)
+		{
+			if (i != j)
+			{
+				vec2 p_v = pebble.velocity;
+				vec2 p_pos = pebble.position;
+				vec2 p1_v = pebble1.velocity;
+				vec2 p1_pos = pebble1.position;
+				//  figure out the distance between the two circles' centers. Pythagoras
+				float a = p_pos.x - p1_pos.x;
+				float b = p_pos.y - p1_pos.y;
+				float c = sqrt(a * a + b * b);
+				if (c < (pebble.radius + pebble1.radius))
+				{
+					//accurate collision points
+					float collisionPointX =
+						((p_pos.x * pebble1.radius) + (p1_pos.x * pebble.radius)) / (pebble.radius + pebble1.radius);
+					float collisionPointY =
+						((p_pos.y * pebble1.radius) + (p1_pos.y * pebble.radius)) / (pebble.radius + pebble1.radius);
+					float pebble_velocity_x = (2 * pebble1.mass * pebble1.velocity.x) / (pebble.mass + pebble1.mass);
+					float pebble_velocity_y = (2 * pebble1.mass * pebble1.velocity.y) / (pebble.mass + pebble1.mass);
+					float pebble1_velocity_x = (2 * pebble.mass * pebble.velocity.x) / (pebble.mass + pebble1.mass);
+					float pebble1_velocity_y = (2 * pebble.mass * pebble.velocity.y) / (pebble.mass + pebble1.mass);
+					fprintf(stderr, "\nAfter Pebble - Collides - %f - with - %f \n ", pebble_velocity_x, pebble1_velocity_x);
+					float bounce = 1.0;
+					pebble.velocity.x = bounce * pebble_velocity_x;
+					pebble.velocity.y = bounce * pebble_velocity_y;
+					pebble1.velocity.x = bounce * pebble1_velocity_x;
+					pebble1.velocity.y = bounce * pebble1_velocity_y;
+					pebble.position.x += pebble_velocity_x * ms;
+					pebble.position.y += pebble_velocity_y * ms;
+					pebble1.position.x += pebble1_velocity_x * ms;
+					pebble1.position.y += pebble1_velocity_y * ms;
+				}
+			}
+			j++;
+		}
+		i++;
+	}
 }
 
 // Draw pebbles using instancing

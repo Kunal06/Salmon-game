@@ -22,6 +22,7 @@ public:
 		vec2 velocity;
 		float radius;
 		float angle;
+		float mass;
 	};
 
 	// Creates all the associated render resources
@@ -42,7 +43,7 @@ public:
 	void spawn_pebble(vec2 position, float angle);
 
 	// Trigger collision checks
-	void collides_with();
+	void collides_with(float ms);
 
 private:
 	GLuint m_instance_vbo;		   // vbo for instancing pebbles
