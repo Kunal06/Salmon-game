@@ -130,7 +130,7 @@ bool World::init(vec2 screen)
 	}
 
 	// Playing background music indefinitely
-	// Mix_PlayMusic(m_background_music, -1);
+	Mix_PlayMusic(m_background_music, -1);
 
 	fprintf(stderr, "Loaded music\n");
 
@@ -190,7 +190,7 @@ bool World::update(float elapsed_ms)
 		{
 			if (m_salmon.is_alive())
 			{
-				// Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
+				Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
 				m_water.set_salmon_dead();
 			}
 			m_salmon.kill();
@@ -208,7 +208,7 @@ bool World::update(float elapsed_ms)
 		{
 			fish_it = m_fish.erase(fish_it);
 			m_salmon.light_up();
-			// Mix_PlayChannel(-1, m_salmon_eat_sound, 0);
+			Mix_PlayChannel(-1, m_salmon_eat_sound, 0);
 			++m_points;
 		}
 		else
@@ -224,7 +224,7 @@ bool World::update(float elapsed_ms)
 			{
 				if (m_salmon.is_alive())
 				{
-					// Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
+					Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
 					m_water.set_salmon_dead();
 				}
 				m_salmon.kill();

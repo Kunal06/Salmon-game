@@ -50,7 +50,6 @@ public:
 	void collides_with(const Turtle &turtle, float ms);
 	void collides_with(const Fish &fish, float ms);
 	void collides_with_salmon(vec2 salmon_pos, float ms);
-	bool check_if_collision(vec2 salmon_pos, vec2 pebble_pos);
 
 private:
 	GLuint m_instance_vbo;		   // vbo for instancing pebbles
