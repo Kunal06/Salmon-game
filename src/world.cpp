@@ -136,7 +136,7 @@ bool World::init(vec2 screen)
 
 	m_current_speed = 1.f;
 
-	return m_salmon.init() && m_water.init() && m_water.draw_rect_init() && m_box.init() && m_redbox.init() && m_pebbles_emitter.init();
+	return m_water.draw_rect_init() && m_box.init() && m_redbox.init() && m_water.init() && m_pebbles_emitter.init() && m_salmon.init();
 }
 
 // Releases all the associated resources
@@ -556,7 +556,7 @@ void World::draw()
 			shark.draw(projection_2D);
 	}
 	m_salmon.draw(projection_2D);
-	m_pebbles_emitter.draw(projection_2D);
+
 	/////////////////////
 	// Truely render to the screen
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -573,7 +573,7 @@ void World::draw()
 	glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
 	m_water.draw(projection_2D);
-
+	m_pebbles_emitter.draw(projection_2D);
 	//////////////////
 	// Presenting
 	glfwSwapBuffers(m_window);

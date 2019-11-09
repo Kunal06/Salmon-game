@@ -193,7 +193,7 @@ void Salmon::draw(const mat3 &projection)
 	// Enabling alpha channel for textures
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_DEPTH_TEST);
+	// glEnable(GL_DEPTH_TEST);
 
 	// Getting uniform locations
 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
@@ -218,7 +218,7 @@ void Salmon::draw(const mat3 &projection)
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
 
 	// !!! Salmon Color
-	float color[] = {1.f, 1.f, 1.f};
+	float color[] = {0.f, 0.f, 0.f};
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
 
